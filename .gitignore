@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.tar.gz
+.DS_Store
+backup_remote/
+*.csv

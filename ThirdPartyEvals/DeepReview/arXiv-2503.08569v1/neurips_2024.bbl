@@ -1,0 +1,396 @@
+\begin{thebibliography}{72}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abdin et~al.(2024)Abdin, Aneja, Behl, Bubeck, Eldan, Gunasekar, Harrison, Hewett, Javaheripi, Kauffmann, Lee, Lee, Li, Liu, Mendes, Nguyen, Price, de~Rosa, Saarikivi, Salim, Shah, Wang, Ward, Wu, Yu, Zhang, and Zhang]{abdin2024phi4technicalreport}
+M.~Abdin, J.~Aneja, H.~Behl, S.~Bubeck, R.~Eldan, S.~Gunasekar, M.~Harrison, R.~J. Hewett, M.~Javaheripi, P.~Kauffmann, J.~R. Lee, Y.~T. Lee, Y.~Li, W.~Liu, C.~C.~T. Mendes, A.~Nguyen, E.~Price, G.~de~Rosa, O.~Saarikivi, A.~Salim, S.~Shah, X.~Wang, R.~Ward, Y.~Wu, D.~Yu, C.~Zhang, and Y.~Zhang.
+\newblock Phi-4 technical report, 2024.
+\newblock URL \url{https://arxiv.org/abs/2412.08905}.
+
+\bibitem[Achiam et~al.(2023)Achiam, Adler, Agarwal, Ahmad, Akkaya, Aleman, Almeida, Altenschmidt, Altman, Anadkat, et~al.]{achiam2023gpt}
+J.~Achiam, S.~Adler, S.~Agarwal, L.~Ahmad, I.~Akkaya, F.~L. Aleman, D.~Almeida, J.~Altenschmidt, S.~Altman, S.~Anadkat, et~al.
+\newblock Gpt-4 technical report.
+\newblock \emph{arXiv preprint arXiv:2303.08774}, 2023.
+
+\bibitem[AI(2025)]{Aider}
+A.~AI.
+\newblock Aider is ai pair programming in your terminal.
+\newblock \url{https://github.com/Aider-AI/aider}, 2025.
+
+\bibitem[Aky{\"u}rek et~al.(2022)Aky{\"u}rek, Schuurmans, Andreas, Ma, and Zhou]{akyurek2022learning}
+E.~Aky{\"u}rek, D.~Schuurmans, J.~Andreas, T.~Ma, and D.~Zhou.
+\newblock What learning algorithm is in-context learning? investigations with linear models.
+\newblock \emph{arXiv preprint arXiv:2211.15661}, 2022.
+
+\bibitem[Alberts et~al.(2008)Alberts, Hanson, and Kelner]{alberts2008reviewing}
+B.~Alberts, B.~Hanson, and K.~L. Kelner.
+\newblock Reviewing peer review, 2008.
+
+\bibitem[Asai et~al.(2024)Asai, He, Shao, Shi, Singh, Chang, Lo, Soldaini, Feldman, D'arcy, Wadden, Latzke, Tian, Ji, Liu, Tong, Wu, Xiong, Zettlemoyer, Neubig, Weld, Downey, tau Yih, Koh, and Hajishirzi]{asai2024openscholarsynthesizingscientificliterature}
+A.~Asai, J.~He, R.~Shao, W.~Shi, A.~Singh, J.~C. Chang, K.~Lo, L.~Soldaini, S.~Feldman, M.~D'arcy, D.~Wadden, M.~Latzke, M.~Tian, P.~Ji, S.~Liu, H.~Tong, B.~Wu, Y.~Xiong, L.~Zettlemoyer, G.~Neubig, D.~Weld, D.~Downey, W.~tau Yih, P.~W. Koh, and H.~Hajishirzi.
+\newblock Openscholar: Synthesizing scientific literature with retrieval-augmented lms, 2024.
+\newblock URL \url{https://arxiv.org/abs/2411.14199}.
+
+\bibitem[Bai et~al.(2023)Bai, Bai, Chu, Cui, Dang, Deng, Fan, Ge, Han, Huang, et~al.]{bai2023qwen}
+J.~Bai, S.~Bai, Y.~Chu, Z.~Cui, K.~Dang, X.~Deng, Y.~Fan, W.~Ge, Y.~Han, F.~Huang, et~al.
+\newblock Qwen technical report.
+\newblock \emph{arXiv preprint arXiv:2309.16609}, 2023.
+
+\bibitem[Blog(2024)]{iclr2025}
+I.~Blog.
+\newblock Iclr 2025: Assisting reviewers.
+\newblock \url{https://blog.iclr.cc/2024/10/09/iclr2025-assisting-reviewers/}, 2024.
+\newblock Accessed: 2024-10-09.
+
+\bibitem[Chris et~al.(2024)Chris, Cong, Robert, Jakob, Jeff, and David]{chris2024the}
+L.~Chris, L.~Cong, L.~Robert, Tjarko, F.~Jakob, C.~Jeff, and H.~David.
+\newblock The ai scientist: Towards fully automated open-ended scientific discovery.
+\newblock \emph{arXiv preprint arXiv:2408.06292v3}, 2024.
+\newblock URL \url{https://www.arxiv.org/abs/2408.06292v3}.
+
+\bibitem[Daniil et~al.(2023)Daniil, Robert, and Gabe]{daniil2023emergent}
+B.~Daniil, A., M.~Robert, and G.~Gabe.
+\newblock Emergent autonomous scientific research capabilities of large language models.
+\newblock \emph{arXiv preprint arXiv:2304.05332v1}, 2023.
+\newblock URL \url{https://www.arxiv.org/abs/2304.05332v1}.
+
+\bibitem[D'Arcy et~al.(2024)D'Arcy, Hope, Birnbaum, and Downey]{d2024marg}
+M.~D'Arcy, T.~Hope, L.~Birnbaum, and D.~Downey.
+\newblock Marg: Multi-agent review generation for scientific papers.
+\newblock \emph{arXiv preprint arXiv:2401.04259}, 2024.
+
+\bibitem[Ding et~al.(2024)Ding, Zhang, Zhang, Xu, Shang, Xu, Yang, and Yang]{ding2024longrope}
+Y.~Ding, L.~L. Zhang, C.~Zhang, Y.~Xu, N.~Shang, J.~Xu, F.~Yang, and M.~Yang.
+\newblock Longro{PE}: Extending {LLM} context window beyond 2 million tokens.
+\newblock In \emph{Forty-first International Conference on Machine Learning}, 2024.
+\newblock URL \url{https://openreview.net/forum?id=ONOtpXLqqw}.
+
+\bibitem[Drori and Te'eni(2024)]{drori2024human}
+I.~Drori and D.~Te'eni.
+\newblock Human-in-the-loop ai reviewing: Feasibility, opportunities, and risks.
+\newblock \emph{Journal of the Association for Information Systems}, 25\penalty0 (1):\penalty0 98--109, 2024.
+
+\bibitem[Du et~al.(2024)Du, Wang, Zhao, Deng, Liu, Lou, Zou, Narayanan~Venkit, Zhang, Srinath, Zhang, Gupta, Li, Li, Wang, Liu, Liu, Gao, Xia, Xing, Jiayang, Wang, Su, Shah, Guo, Gu, Li, Wei, Wang, Cheng, Ranathunga, Fang, Fu, Liu, Huang, Blanco, Cao, Zhang, Yu, and Yin]{du2024llms}
+J.~Du, Y.~Wang, W.~Zhao, Z.~Deng, S.~Liu, R.~Lou, H.~P. Zou, P.~Narayanan~Venkit, N.~Zhang, M.~Srinath, H.~R. Zhang, V.~Gupta, Y.~Li, T.~Li, F.~Wang, Q.~Liu, T.~Liu, P.~Gao, C.~Xia, C.~Xing, C.~Jiayang, Z.~Wang, Y.~Su, R.~S. Shah, R.~Guo, J.~Gu, H.~Li, K.~Wei, Z.~Wang, L.~Cheng, S.~Ranathunga, M.~Fang, J.~Fu, F.~Liu, R.~Huang, E.~Blanco, Y.~Cao, R.~Zhang, P.~S. Yu, and W.~Yin.
+\newblock {LLM}s assist {NLP} researchers: Critique paper (meta-)reviewing.
+\newblock In Y.~Al-Onaizan, M.~Bansal, and Y.-N. Chen, editors, \emph{Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing}, pages 5081--5099, Miami, Florida, USA, Nov. 2024. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2024.emnlp-main.292}.
+\newblock URL \url{https://aclanthology.org/2024.emnlp-main.292/}.
+
+\bibitem[Funkquist et~al.(2022)Funkquist, Kuznetsov, Hou, and Gurevych]{funkquist2022citebench}
+M.~Funkquist, I.~Kuznetsov, Y.~Hou, and I.~Gurevych.
+\newblock Citebench: A benchmark for scientific citation text generation.
+\newblock \emph{arXiv preprint arXiv:2212.09577}, 2022.
+
+\bibitem[Gao et~al.(2024)Gao, Brantley, and Joachims]{gao2024reviewer2}
+Z.~Gao, K.~Brantley, and T.~Joachims.
+\newblock Reviewer2: Optimizing review generation through prompt generation.
+\newblock \emph{arXiv preprint arXiv:2402.10886}, 2024.
+
+\bibitem[Ghafarollahi and Buehler(2024)]{ghafarollahi2024sciagents}
+A.~Ghafarollahi and M.~J. Buehler.
+\newblock Sciagents: Automating scientific discovery through multi-agent intelligent graph reasoning.
+\newblock \emph{arXiv preprint arXiv:2409.05556}, 2024.
+
+\bibitem[Guan et~al.(2025)Guan, Zhang, Liu, Shang, Sun, Zhu, Yang, and Yang]{guan2025rstarmathsmallllmsmaster}
+X.~Guan, L.~L. Zhang, Y.~Liu, N.~Shang, Y.~Sun, Y.~Zhu, F.~Yang, and M.~Yang.
+\newblock rstar-math: Small llms can master math reasoning with self-evolved deep thinking, 2025.
+\newblock URL \url{https://arxiv.org/abs/2501.04519}.
+
+\bibitem[Guo et~al.(2025)Guo, Yang, Zhang, Song, Zhang, Xu, Zhu, Ma, Wang, Bi, et~al.]{guo2025deepseek}
+D.~Guo, D.~Yang, H.~Zhang, J.~Song, R.~Zhang, R.~Xu, Q.~Zhu, S.~Ma, P.~Wang, X.~Bi, et~al.
+\newblock Deepseek-r1: Incentivizing reasoning capability in llms via reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2501.12948}, 2025.
+
+\bibitem[Hao et~al.(2024)Hao, Sukhbaatar, Su, Li, Hu, Weston, and Tian]{hao2024traininglargelanguagemodels}
+S.~Hao, S.~Sukhbaatar, D.~Su, X.~Li, Z.~Hu, J.~Weston, and Y.~Tian.
+\newblock Training large language models to reason in a continuous latent space, 2024.
+\newblock URL \url{https://arxiv.org/abs/2412.06769}.
+
+\bibitem[Hendrycks et~al.(2021)Hendrycks, Burns, Kadavath, Arora, Basart, Tang, Song, and Steinhardt]{hendrycksmath2021}
+D.~Hendrycks, C.~Burns, S.~Kadavath, A.~Arora, S.~Basart, E.~Tang, D.~Song, and J.~Steinhardt.
+\newblock Measuring mathematical problem solving with the math dataset.
+\newblock \emph{NeurIPS}, 2021.
+
+\bibitem[Hu et~al.(2024)Hu, Fu, Wang, Wang, Li, Xu, Lu, Jin, Pan, and Lan]{hu2024nova}
+X.~Hu, H.~Fu, J.~Wang, Y.~Wang, Z.~Li, R.~Xu, Y.~Lu, Y.~Jin, L.~Pan, and Z.~Lan.
+\newblock Nova: An iterative planning and search approach to enhance novelty and diversity of llm generated ideas.
+\newblock \emph{arXiv preprint arXiv:2410.14255}, 2024.
+
+\bibitem[Jaech et~al.(2024)Jaech, Kalai, Lerer, Richardson, El-Kishky, Low, Helyar, Madry, Beutel, Carney, et~al.]{jaech2024openai}
+A.~Jaech, A.~Kalai, A.~Lerer, A.~Richardson, A.~El-Kishky, A.~Low, A.~Helyar, A.~Madry, A.~Beutel, A.~Carney, et~al.
+\newblock Openai o1 system card.
+\newblock \emph{arXiv preprint arXiv:2412.16720}, 2024.
+
+\bibitem[Ji et~al.(2023)Ji, Yu, Xu, Lee, Ishii, and Fung]{ji-etal-2023-towards}
+Z.~Ji, T.~Yu, Y.~Xu, N.~Lee, E.~Ishii, and P.~Fung.
+\newblock Towards mitigating {LLM} hallucination via self reflection.
+\newblock In H.~Bouamor, J.~Pino, and K.~Bali, editors, \emph{Findings of the Association for Computational Linguistics: EMNLP 2023}, pages 1827--1843, Singapore, Dec. 2023. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2023.findings-emnlp.123}.
+\newblock URL \url{https://aclanthology.org/2023.findings-emnlp.123/}.
+
+\bibitem[Jin et~al.(2024{\natexlab{a}})Jin, Zhao, Wang, Chen, Zhu, Xiao, and Wang]{jin-etal-2024-agentreview}
+Y.~Jin, Q.~Zhao, Y.~Wang, H.~Chen, K.~Zhu, Y.~Xiao, and J.~Wang.
+\newblock {A}gent{R}eview: Exploring peer review dynamics with {LLM} agents.
+\newblock In Y.~Al-Onaizan, M.~Bansal, and Y.-N. Chen, editors, \emph{Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing}, pages 1208--1226, Miami, Florida, USA, Nov. 2024{\natexlab{a}}. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2024.emnlp-main.70}.
+\newblock URL \url{https://aclanthology.org/2024.emnlp-main.70/}.
+
+\bibitem[Jin et~al.(2024{\natexlab{b}})Jin, Zhao, Wang, Chen, Zhu, Xiao, and Wang]{jin2024agentreview}
+Y.~Jin, Q.~Zhao, Y.~Wang, H.~Chen, K.~Zhu, Y.~Xiao, and J.~Wang.
+\newblock Agentreview: Exploring peer review dynamics with llm agents.
+\newblock \emph{arXiv preprint arXiv:2406.12708}, 2024{\natexlab{b}}.
+
+\bibitem[Kang et~al.(2018)Kang, Ammar, Dalvi, Van~Zuylen, Kohlmeier, Hovy, and Schwartz]{kang2018dataset}
+D.~Kang, W.~Ammar, B.~Dalvi, M.~Van~Zuylen, S.~Kohlmeier, E.~Hovy, and R.~Schwartz.
+\newblock A dataset of peer reviews (peerread): Collection, insights and nlp applications.
+\newblock \emph{arXiv preprint arXiv:1804.09635}, 2018.
+
+\bibitem[Langley(1987)]{langley1987scientific}
+P.~Langley.
+\newblock \emph{Scientific discovery: Computational explorations of the creative processes}.
+\newblock MIT press, 1987.
+
+\bibitem[Latona et~al.(2024)Latona, Ribeiro, Davidson, Veselovsky, and West]{latona2024ai}
+G.~R. Latona, M.~H. Ribeiro, T.~R. Davidson, V.~Veselovsky, and R.~West.
+\newblock The ai review lottery: Widespread ai-assisted peer reviews boost paper scores and acceptance rates.
+\newblock \emph{arXiv preprint arXiv:2405.02150}, 2024.
+
+\bibitem[Li et~al.(2024{\natexlab{a}})Li, Jiang, Huang, Beigi, Zhao, Tan, Bhattacharjee, Jiang, Chen, Wu, Shu, Cheng, and Liu]{li2024llmasajudge}
+D.~Li, B.~Jiang, L.~Huang, A.~Beigi, C.~Zhao, Z.~Tan, A.~Bhattacharjee, Y.~Jiang, C.~Chen, T.~Wu, K.~Shu, L.~Cheng, and H.~Liu.
+\newblock From generation to judgment: Opportunities and challenges of llm-as-a-judge.
+\newblock \emph{arXiv preprint arXiv: 2411.16594}, 2024{\natexlab{a}}.
+
+\bibitem[Li et~al.(2023)Li, Hovy, and Lau]{li2023summarizing}
+M.~Li, E.~Hovy, and J.~H. Lau.
+\newblock Summarizing multiple documents with conversational structure for meta-review generation.
+\newblock \emph{arXiv preprint arXiv:2305.01498}, 2023.
+
+\bibitem[Li et~al.(2024{\natexlab{b}})Li, Fox, and Goodman]{li2024automated}
+M.~Y. Li, E.~Fox, and N.~Goodman.
+\newblock Automated statistical model discovery with language models.
+\newblock In \emph{Forty-first International Conference on Machine Learning}, 2024{\natexlab{b}}.
+\newblock URL \url{https://openreview.net/forum?id=B5906M4Wnd}.
+
+\bibitem[Li et~al.(2024{\natexlab{c}})Li, Chang, and Le]{li-etal-2024-simulating}
+Z.~Li, Y.~Chang, and X.~Le.
+\newblock Simulating expert discussions with multi-agent for enhanced scientific problem solving.
+\newblock In T.~Ghosal, A.~Singh, A.~Waard, P.~Mayr, A.~Naik, O.~Weller, Y.~Lee, S.~Shen, and Y.~Qin, editors, \emph{Proceedings of the Fourth Workshop on Scholarly Document Processing (SDP 2024)}, pages 243--256, Bangkok, Thailand, Aug. 2024{\natexlab{c}}. Association for Computational Linguistics.
+\newblock URL \url{https://aclanthology.org/2024.sdp-1.23/}.
+
+\bibitem[Liang et~al.(2024)Liang, Izzo, Zhang, Lepp, Cao, Zhao, Chen, Ye, Liu, Huang, et~al.]{liang2024monitoring}
+W.~Liang, Z.~Izzo, Y.~Zhang, H.~Lepp, H.~Cao, X.~Zhao, L.~Chen, H.~Ye, S.~Liu, Z.~Huang, et~al.
+\newblock Monitoring ai-modified content at scale: A case study on the impact of chatgpt on ai conference peer reviews.
+\newblock \emph{arXiv preprint arXiv:2403.07183}, 2024.
+
+\bibitem[Lin(2004)]{lin-2004-rouge}
+C.-Y. Lin.
+\newblock {ROUGE}: A package for automatic evaluation of summaries.
+\newblock In \emph{Text Summarization Branches Out}, pages 74--81, Barcelona, Spain, July 2004. Association for Computational Linguistics.
+\newblock URL \url{https://aclanthology.org/W04-1013/}.
+
+\bibitem[Madaan et~al.(2024)Madaan, Tandon, Gupta, Hallinan, Gao, Wiegreffe, Alon, Dziri, Prabhumoye, Yang, et~al.]{madaan2024self}
+A.~Madaan, N.~Tandon, P.~Gupta, S.~Hallinan, L.~Gao, S.~Wiegreffe, U.~Alon, N.~Dziri, S.~Prabhumoye, Y.~Yang, et~al.
+\newblock Self-refine: Iterative refinement with self-feedback.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Nye et~al.(2021)Nye, Andreassen, Gur-Ari, Michalewski, Austin, Bieber, Dohan, Lewkowycz, Bosma, Luan, et~al.]{nye2021show}
+M.~Nye, A.~J. Andreassen, G.~Gur-Ari, H.~Michalewski, J.~Austin, D.~Bieber, D.~Dohan, A.~Lewkowycz, M.~Bosma, D.~Luan, et~al.
+\newblock Show your work: Scratchpads for intermediate computation with language models.
+\newblock \emph{arXiv preprint arXiv:2112.00114}, 2021.
+
+\bibitem[Papineni et~al.(2002)Papineni, Roukos, Ward, and Zhu]{10.3115/1073083.1073135}
+K.~Papineni, S.~Roukos, T.~Ward, and W.-J. Zhu.
+\newblock Bleu: a method for automatic evaluation of machine translation.
+\newblock In \emph{Proceedings of the 40th Annual Meeting on Association for Computational Linguistics}, ACL '02, page 311–318, USA, 2002. Association for Computational Linguistics.
+\newblock \doi{10.3115/1073083.1073135}.
+\newblock URL \url{https://doi.org/10.3115/1073083.1073135}.
+
+\bibitem[Qwen et~al.(2025)Qwen, :, Yang, Yang, Zhang, Hui, Zheng, Yu, Li, Liu, Huang, Wei, Lin, Yang, Tu, Zhang, Yang, Yang, Zhou, Lin, Dang, Lu, Bao, Yang, Yu, Li, Xue, Zhang, Zhu, Men, Lin, Li, Tang, Xia, Ren, Ren, Fan, Su, Zhang, Wan, Liu, Cui, Zhang, and Qiu]{qwen2025qwen25technicalreport}
+Qwen, :, A.~Yang, B.~Yang, B.~Zhang, B.~Hui, B.~Zheng, B.~Yu, C.~Li, D.~Liu, F.~Huang, H.~Wei, H.~Lin, J.~Yang, J.~Tu, J.~Zhang, J.~Yang, J.~Yang, J.~Zhou, J.~Lin, K.~Dang, K.~Lu, K.~Bao, K.~Yang, L.~Yu, M.~Li, M.~Xue, P.~Zhang, Q.~Zhu, R.~Men, R.~Lin, T.~Li, T.~Tang, T.~Xia, X.~Ren, X.~Ren, Y.~Fan, Y.~Su, Y.~Zhang, Y.~Wan, Y.~Liu, Z.~Cui, Z.~Zhang, and Z.~Qiu.
+\newblock Qwen2.5 technical report, 2025.
+\newblock URL \url{https://arxiv.org/abs/2412.15115}.
+
+\bibitem[Rajbhandari et~al.(2020)Rajbhandari, Rasley, Ruwase, and He]{rajbhandari2020zeromemoryoptimizationstraining}
+S.~Rajbhandari, J.~Rasley, O.~Ruwase, and Y.~He.
+\newblock Zero: Memory optimizations toward training trillion parameter models, 2020.
+\newblock URL \url{https://arxiv.org/abs/1910.02054}.
+
+\bibitem[Rasal and Hauer(2024)]{rasal2024navigating}
+S.~Rasal and E.~Hauer.
+\newblock Navigating complexity: Orchestrated problem solving with multi-agent llms.
+\newblock \emph{arXiv preprint arXiv:2402.16713}, 2024.
+
+\bibitem[Rasley et~al.(2020)Rasley, Rajbhandari, Ruwase, and He]{10.1145/3394486.3406703}
+J.~Rasley, S.~Rajbhandari, O.~Ruwase, and Y.~He.
+\newblock Deepspeed: System optimizations enable training deep learning models with over 100 billion parameters.
+\newblock In \emph{Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining}, KDD '20, page 3505–3506, New York, NY, USA, 2020. Association for Computing Machinery.
+\newblock ISBN 9781450379984.
+\newblock \doi{10.1145/3394486.3406703}.
+\newblock URL \url{https://doi.org/10.1145/3394486.3406703}.
+
+\bibitem[Rewina et~al.(2025)Rewina, Natalie, Sreyoshi, Satya, Alex, Elizabeth, Ikkei, David, Aman, and Naumaan]{rewina2025potential}
+B.~Rewina, P.~Natalie, B.~Sreyoshi, K.~Satya, G.~Alex, C.~Elizabeth, I.~Ikkei, T.~David, C.~Aman, and N.~Naumaan.
+\newblock Potential and perils of large language models as judges of unstructured textual data.
+\newblock \emph{arXiv preprint arXiv:2501.08167v2}, 2025.
+\newblock URL \url{https://www.arxiv.org/abs/2501.08167v2}.
+
+\bibitem[Santu et~al.(2024)Santu, Sinha, Bansal, Knipper, Sarkar, Salvador, Mahajan, Guttikonda, Akter, Freestone, et~al.]{santu2024prompting}
+S.~K.~K. Santu, S.~K. Sinha, N.~Bansal, A.~Knipper, S.~Sarkar, J.~Salvador, Y.~Mahajan, S.~Guttikonda, M.~Akter, M.~Freestone, et~al.
+\newblock Prompting llms to compose meta-review drafts from peer-review narratives of scholarly manuscripts.
+\newblock \emph{arXiv preprint arXiv:2402.15589}, 2024.
+
+\bibitem[Scherbakov et~al.(2024)Scherbakov, Hubig, Jansari, Bakumenko, and Lenert]{scherbakov2024emergencelargelanguagemodels}
+D.~Scherbakov, N.~Hubig, V.~Jansari, A.~Bakumenko, and L.~A. Lenert.
+\newblock The emergence of large language models (llm) as a tool in literature reviews: an llm automated systematic review, 2024.
+\newblock URL \url{https://arxiv.org/abs/2409.04600}.
+
+\bibitem[Schintler et~al.(2023)Schintler, McNeely, and Witte]{schintler2023criticalexaminationethicsaimediated}
+L.~A. Schintler, C.~L. McNeely, and J.~Witte.
+\newblock A critical examination of the ethics of ai-mediated peer review, 2023.
+\newblock URL \url{https://arxiv.org/abs/2309.12356}.
+
+\bibitem[Si et~al.(2025)Si, Yang, and Hashimoto]{si2025can}
+C.~Si, D.~Yang, and T.~Hashimoto.
+\newblock Can {LLM}s generate novel research ideas? a large-scale human study with 100+ {NLP} researchers.
+\newblock In \emph{The Thirteenth International Conference on Learning Representations}, 2025.
+\newblock URL \url{https://openreview.net/forum?id=M23dTGWCZy}.
+
+\bibitem[Su et~al.(2024)Su, Chen, Tang, Zheng, Li, Yin, Ouyang, and Dong]{su2024two}
+H.~Su, R.~Chen, S.~Tang, X.~Zheng, J.~Li, Z.~Yin, W.~Ouyang, and N.~Dong.
+\newblock Two heads are better than one: A multi-agent system has the potential to improve scientific idea generation.
+\newblock \emph{arXiv preprint arXiv:2410.09403}, 2024.
+
+\bibitem[Swarnadeep et~al.(2025)Swarnadeep, Xian, Marjan, Jason, and Tianlu]{swarnadeep2025learning}
+S.~Swarnadeep, L.~Xian, G.~Marjan, W.~Jason, and W.~Tianlu.
+\newblock Learning to plan \& reason for evaluation with thinking-llm-as-a-judge.
+\newblock \emph{arXiv preprint arXiv:2501.18099v1}, 2025.
+\newblock URL \url{https://www.arxiv.org/abs/2501.18099v1}.
+
+\bibitem[Tan et~al.(2024{\natexlab{a}})Tan, Lyu, Li, Gao, Wei, Ma, Liu, and Li]{tan2024peer}
+C.~Tan, D.~Lyu, S.~Li, Z.~Gao, J.~Wei, S.~Ma, Z.~Liu, and S.~Z. Li.
+\newblock Peer review as a multi-turn and long-context dialogue with role-based interactions.
+\newblock \emph{arXiv preprint arXiv:2406.05688}, 2024{\natexlab{a}}.
+
+\bibitem[Tan et~al.(2024{\natexlab{b}})Tan, Lyu, Li, Gao, Wei, Ma, Liu, and Li]{tan2024peerreviewmultiturnlongcontext}
+C.~Tan, D.~Lyu, S.~Li, Z.~Gao, J.~Wei, S.~Ma, Z.~Liu, and S.~Z. Li.
+\newblock Peer review as a multi-turn and long-context dialogue with role-based interactions, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2406.05688}.
+
+\bibitem[Touvron et~al.(2023)Touvron, Lavril, Izacard, Martinet, Lachaux, Lacroix, Rozi{\`e}re, Goyal, Hambro, Azhar, et~al.]{touvron2023llama}
+H.~Touvron, T.~Lavril, G.~Izacard, X.~Martinet, M.-A. Lachaux, T.~Lacroix, B.~Rozi{\`e}re, N.~Goyal, E.~Hambro, F.~Azhar, et~al.
+\newblock Llama: Open and efficient foundation language models.
+\newblock \emph{arXiv preprint arXiv:2302.13971}, 2023.
+
+\bibitem[Tyser et~al.(2024)Tyser, Segev, Longhitano, Zhang, Meeks, Lee, Garg, Belsten, Shporer, Udell, et~al.]{tyser2024ai}
+K.~Tyser, B.~Segev, G.~Longhitano, X.-Y. Zhang, Z.~Meeks, J.~Lee, U.~Garg, N.~Belsten, A.~Shporer, M.~Udell, et~al.
+\newblock Ai-driven review systems: evaluating llms in scalable and bias-aware academic reviews.
+\newblock \emph{arXiv preprint arXiv:2408.10365}, 2024.
+
+\bibitem[Wang et~al.(2024{\natexlab{a}})Wang, Xu, Zhao, Ouyang, Wu, Zhao, Xu, Liu, Qu, Shang, Zhang, Wei, Sui, Li, Shi, Qiao, Lin, and He]{wang2024mineruopensourcesolutionprecise}
+B.~Wang, C.~Xu, X.~Zhao, L.~Ouyang, F.~Wu, Z.~Zhao, R.~Xu, K.~Liu, Y.~Qu, F.~Shang, B.~Zhang, L.~Wei, Z.~Sui, W.~Li, B.~Shi, Y.~Qiao, D.~Lin, and C.~He.
+\newblock Mineru: An open-source solution for precise document content extraction, 2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2409.18839}.
+
+\bibitem[Wang et~al.(2020)Wang, Zeng, Huang, Knight, Ji, and Rajani]{wang-etal-2020-reviewrobot}
+Q.~Wang, Q.~Zeng, L.~Huang, K.~Knight, H.~Ji, and N.~F. Rajani.
+\newblock {R}eview{R}obot: Explainable paper review generation based on knowledge synthesis.
+\newblock In B.~Davis, Y.~Graham, J.~Kelleher, and Y.~Sripada, editors, \emph{Proceedings of the 13th International Conference on Natural Language Generation}, pages 384--397, Dublin, Ireland, Dec. 2020. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2020.inlg-1.44}.
+\newblock URL \url{https://aclanthology.org/2020.inlg-1.44/}.
+
+\bibitem[Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou]{wangself}
+X.~Wang, J.~Wei, D.~Schuurmans, Q.~V. Le, E.~H. Chi, S.~Narang, A.~Chowdhery, and D.~Zhou.
+\newblock Self-consistency improves chain of thought reasoning in language models.
+\newblock In \emph{The Eleventh International Conference on Learning Representations}, 2023.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Yu, Yao, Zeng, Yang, Wang, Chen, Jiang, Xie, Wang, Xie, Ye, Zhang, and Zhang]{wang2024pandalm}
+Y.~Wang, Z.~Yu, W.~Yao, Z.~Zeng, L.~Yang, C.~Wang, H.~Chen, C.~Jiang, R.~Xie, J.~Wang, X.~Xie, W.~Ye, S.~Zhang, and Y.~Zhang.
+\newblock Panda{LM}: An automatic evaluation benchmark for {LLM} instruction tuning optimization.
+\newblock In \emph{The Twelfth International Conference on Learning Representations}, 2024{\natexlab{b}}.
+\newblock URL \url{https://openreview.net/forum?id=5Nn2BLV7SB}.
+
+\bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Xia, Chi, Le, Zhou, et~al.]{weichain}
+J.~Wei, X.~Wang, D.~Schuurmans, M.~Bosma, F.~Xia, E.~H. Chi, Q.~V. Le, D.~Zhou, et~al.
+\newblock Chain-of-thought prompting elicits reasoning in large language models.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2022.
+
+\bibitem[Weng et~al.(2023)Weng, Zhu, Xia, Li, He, Liu, Sun, Liu, and Zhao]{weng2023large}
+Y.~Weng, M.~Zhu, F.~Xia, B.~Li, S.~He, S.~Liu, B.~Sun, K.~Liu, and J.~Zhao.
+\newblock Large language models are better reasoners with self-verification.
+\newblock In \emph{The 2023 Conference on Empirical Methods in Natural Language Processing}, 2023.
+
+\bibitem[Weng et~al.(2025)Weng, Zhu, Bao, Zhang, Wang, Zhang, and Yang]{yixuan2024cycleresearcher}
+Y.~Weng, M.~Zhu, G.~Bao, H.~Zhang, J.~Wang, Y.~Zhang, and L.~Yang.
+\newblock Cycleresearcher: Improving automated research via automated review.
+\newblock In \emph{The Thirteenth International Conference on Learning Representations}, 2025.
+\newblock URL \url{https://openreview.net/forum?id=bjcsVLoHYs}.
+
+\bibitem[Xiang et~al.(2025)Xiang, Snell, Gandhi, Albalak, Singh, Blagden, Phung, Rafailov, Lile, Mahan, Castricato, Franken, Haber, and Finn]{xiang20252reasoningllmslearning}
+V.~Xiang, C.~Snell, K.~Gandhi, A.~Albalak, A.~Singh, C.~Blagden, D.~Phung, R.~Rafailov, N.~Lile, D.~Mahan, L.~Castricato, J.-P. Franken, N.~Haber, and C.~Finn.
+\newblock Towards system 2 reasoning in llms: Learning how to think with meta chain-of-thought, 2025.
+\newblock URL \url{https://arxiv.org/abs/2501.04682}.
+
+\bibitem[Yang et~al.(2024)Yang, Du, Li, Zheng, Poria, and Cambria]{yang-etal-2024-large-language}
+Z.~Yang, X.~Du, J.~Li, J.~Zheng, S.~Poria, and E.~Cambria.
+\newblock Large language models for automated open-domain scientific hypotheses discovery.
+\newblock In L.-W. Ku, A.~Martins, and V.~Srikumar, editors, \emph{Findings of the Association for Computational Linguistics: ACL 2024}, pages 13545--13565, Bangkok, Thailand, Aug. 2024. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2024.findings-acl.804}.
+\newblock URL \url{https://aclanthology.org/2024.findings-acl.804/}.
+
+\bibitem[Yao et~al.(2024)Yao, Yu, Zhao, Shafran, Griffiths, Cao, and Narasimhan]{yao2024tree}
+S.~Yao, D.~Yu, J.~Zhao, I.~Shafran, T.~Griffiths, Y.~Cao, and K.~Narasimhan.
+\newblock Tree of thoughts: Deliberate problem solving with large language models.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Ye et~al.(2024)Ye, Pang, Chai, Chen, Yin, Xiang, Dong, Shao, and Chen]{ye2024we}
+R.~Ye, X.~Pang, J.~Chai, J.~Chen, Z.~Yin, Z.~Xiang, X.~Dong, J.~Shao, and S.~Chen.
+\newblock Are we there yet? revealing the risks of utilizing large language models in scholarly peer review.
+\newblock \emph{arXiv preprint arXiv:2412.01708}, 2024.
+
+\bibitem[Yu et~al.(2024)Yu, Ding, Tan, Luo, Weng, Gong, Zeng, Cui, Han, Sun, et~al.]{yu2024automated}
+J.~Yu, Z.~Ding, J.~Tan, K.~Luo, Z.~Weng, C.~Gong, L.~Zeng, R.~Cui, C.~Han, Q.~Sun, et~al.
+\newblock Automated peer reviewing in paper sea: Standardization, evaluation, and analysis.
+\newblock \emph{arXiv preprint arXiv:2407.12857}, 2024.
+
+\bibitem[Yuan et~al.(2021)Yuan, Liu, and Neubig]{yuan2021automatescientificreviewing}
+W.~Yuan, P.~Liu, and G.~Neubig.
+\newblock Can we automate scientific reviewing?, 2021.
+\newblock URL \url{https://arxiv.org/abs/2102.00176}.
+
+\bibitem[Zeng et~al.(2024)Zeng, Sidhu, Chan, Wang, and Ji]{zeng2024scientific}
+Q.~Zeng, M.~Sidhu, H.~P. Chan, L.~Wang, and H.~Ji.
+\newblock Scientific opinion summarization: Paper meta-review generation dataset, methods, and evaluation.
+\newblock In \emph{1st AI4Research Workshop}, 2024.
+
+\bibitem[Zhou et~al.(2024{\natexlab{a}})Zhou, Chen, and Yu]{zhou-etal-2024-llm}
+R.~Zhou, L.~Chen, and K.~Yu.
+\newblock Is {LLM} a reliable reviewer? a comprehensive evaluation of {LLM} on automatic paper reviewing tasks.
+\newblock In N.~Calzolari, M.-Y. Kan, V.~Hoste, A.~Lenci, S.~Sakti, and N.~Xue, editors, \emph{Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024)}, pages 9340--9351, Torino, Italia, May 2024{\natexlab{a}}. ELRA and ICCL.
+\newblock URL \url{https://aclanthology.org/2024.lrec-main.816/}.
+
+\bibitem[Zhou et~al.(2024{\natexlab{b}})Zhou, Chen, and Yu]{zhou2024llm}
+R.~Zhou, L.~Chen, and K.~Yu.
+\newblock Is llm a reliable reviewer? a comprehensive evaluation of llm on automatic paper reviewing tasks.
+\newblock In \emph{Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024)}, pages 9340--9351, 2024{\natexlab{b}}.
+
+\bibitem[Zhuang et~al.(2025)Zhuang, Chen, Xu, Jiang, and Lin]{zhuang2025large}
+Z.~Zhuang, J.~Chen, H.~Xu, Y.~Jiang, and J.~Lin.
+\newblock Large language models for automated scholarly paper review: A survey.
+\newblock \emph{arXiv preprint arXiv:2501.10326}, 2025.
+
+\bibitem[Zonglin et~al.(2023)Zonglin, Xinya, Junxian, Jie, Soujanya, and Erik]{zonglin2023large}
+Y.~Zonglin, D.~Xinya, L.~Junxian, Z.~Jie, P.~Soujanya, and C.~Erik.
+\newblock Large language models for automated open-domain scientific hypotheses discovery.
+\newblock \emph{arXiv preprint arXiv:2309.02726}, 2023.
+\newblock URL \url{https://www.arxiv.org/abs/2309.02726}.
+
+\bibitem[Zyska et~al.(2023)Zyska, Dycke, Buchmann, Kuznetsov, and Gurevych]{zyska2023care}
+D.~Zyska, N.~Dycke, J.~Buchmann, I.~Kuznetsov, and I.~Gurevych.
+\newblock Care: Collaborative ai-assisted reading environment.
+\newblock \emph{arXiv preprint arXiv:2302.12611}, 2023.
+
+\end{thebibliography}

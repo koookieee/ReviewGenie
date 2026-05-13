@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trajectory Viewer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3348;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --accent: #6366f1;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .header h1 { font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .badge {
+    padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500;
+  }
+  .badge-model { background: #1e293b; color: #60a5fa; }
+  .badge-steps { background: #0d2e1f; color: #34d399; }
+  .badge-cost  { background: #2a1f00; color: #fbbf24; }
+
+  .file-input-area { margin-left: auto; }
+  .file-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500;
+    white-space: nowrap;
+  }
+  .file-btn:hover { opacity: 0.85; }
+
+  /* ── Main layout ── */
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    flex-shrink: 0; overflow: hidden;
+  }
+  .sidebar-header {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-header input {
+    width: 100%;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 10px; color: var(--text); font-size: 12px;
+    outline: none;
+  }
+  .sidebar-header input:focus { border-color: var(--accent); }
+
+  .step-list { flex: 1; overflow-y: auto; padding: 4px; }
+
+  .step-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 8px; border-radius: 6px; cursor: pointer;
+    margin-bottom: 1px; border: 1px solid transparent;
+    transition: background 0.1s;
+    min-width: 0;
+  }
+  .step-item:hover { background: var(--surface2); }
+  .step-item.active { background: #1a2440; border-color: #4f5fa8; }
+
+  .step-num { font-size: 10px; color: var(--muted); min-width: 20px; text-align: right; flex-shrink: 0; }
+  .step-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .step-label { font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .step-tool-badge {
+    font-size: 10px; padding: 1px 5px; border-radius: 4px;
+    background: #1f1800; color: #f59e0b; flex-shrink: 0; max-width: 70px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ── Detail panel ── */
+  .detail {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  /* Step header */
+  .step-header {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding-bottom: 2px;
+  }
+  .step-source {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 5px;
+    letter-spacing: 0.05em;
+  }
+  .source-user  { background: #1a304f; color: #60a5fa; }
+  .source-agent { background: #0b2b1e; color: #34d399; }
+  .step-id-badge { font-size: 11px; color: var(--muted); background: var(--surface2); padding: 2px 7px; border-radius: 4px; }
+  .step-model    { font-size: 11px; color: var(--muted); }
+  .step-ts       { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  /* Sections */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .section-title {
+    padding: 7px 12px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+    user-select: none; cursor: pointer;
+  }
+  .section-title .chevron { margin-left: auto; transition: transform 0.15s; font-style: normal; }
+  .section-title.collapsed .chevron { transform: rotate(-90deg); }
+
+  .section-title.thinking { color: #a78bfa; background: #140e2a; }
+  .section-title.message  { color: #7dd3fc; background: #0b1d2e; }
+  .section-title.tool     { color: #fbbf24; background: #1a1100; }
+  .section-title.obs      { color: #6ee7b7; background: #04170e; }
+  .section-title.metrics  { color: #94a3b8; background: #111520; }
+
+  .section-body {
+    padding: 12px 14px;
+    font-size: 13px; line-height: 1.65;
+    white-space: pre-wrap; word-break: break-word;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 420px;
+  }
+  .section-body.mono {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px;
+    background: #090b12;
+    color: #c9d1d9;
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  .section-body.hidden { display: none; }
+
+  /* Tool call layout */
+  .tool-block { display: flex; flex-direction: column; gap: 0; }
+  .tool-name-row {
+    padding: 8px 14px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    background: #0e1118;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .fn-name { color: #fbbf24; font-weight: 700; font-size: 13px; }
+  .call-id { color: #475569; font-size: 10px; }
+
+  .arg-row { display: flex; flex-direction: column; gap: 0; }
+  .arg-key-row {
+    padding: 6px 14px 2px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+    color: #64748b; text-transform: uppercase;
+    background: #090b12;
+  }
+  .arg-val-block {
+    padding: 2px 14px 10px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px; line-height: 1.55;
+    background: #090b12; color: #86efac;
+    white-space: pre-wrap; word-break: break-word;
+    overflow-x: auto;
+    max-height: 420px; overflow-y: auto;
+  }
+  .arg-val-block .bash-cmd { color: #bfdbfe; }
+
+  /* Metrics */
+  .metrics-row { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 14px; }
+  .metric { display: flex; flex-direction: column; gap: 2px; }
+  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric-value { font-size: 14px; font-weight: 600; }
+
+  /* Markdown */
+  .md h1 { font-size: 16px; margin: 0.5em 0 0.3em; font-weight: 700; }
+  .md h2 { font-size: 14px; margin: 0.8em 0 0.3em; color: #93c5fd; font-weight: 600; }
+  .md h3 { font-size: 13px; margin: 0.6em 0 0.2em; color: #6ee7b7; font-weight: 600; }
+  .md p  { margin-bottom: 0.5em; }
+  .md code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 11px; color: #f0abfc; }
+  .md strong { font-weight: 700; color: #f1f5f9; }
+  .md ul, .md ol { padding-left: 18px; margin-bottom: 0.5em; }
+  .md li { margin-bottom: 3px; }
+  .md hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .md a  { color: #60a5fa; text-decoration: none; }
+
+  /* Empty / loading */
+  .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
+  .empty .icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* Summary bar */
+  .summary-bar {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 5px 16px;
+    display: flex; gap: 18px; align-items: center;
+    font-size: 11px; color: var(--muted); flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .summary-bar strong { color: var(--text); }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2e3348; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3e4560; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔍 Trajectory Viewer</h1>
+  <div class="meta" id="metaBar">
+    <span style="color:var(--muted);font-size:12px">No trajectory loaded</span>
+  </div>
+  <div class="file-input-area" style="display:flex;gap:8px;align-items:center">
+    <select id="trajSelect" style="display:none;background:#1a1d27;color:#e2e8f0;border:1px solid #2e3348;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer" onchange="loadFromUrl(this.value)">
+      <option value="">— select run —</option>
+    </select>
+    <input type="file" id="fileInput" accept=".json" style="display:none">
+    <button class="file-btn" onclick="document.getElementById('fileInput').click()">Open JSON</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <input type="text" id="searchInput" placeholder="🔍  Filter steps…" oninput="filterSteps()">
+    </div>
+    <div class="step-list" id="stepList">
+      <div class="empty" style="padding:24px 8px;font-size:12px;">No trajectory loaded</div>
+    </div>
+  </div>
+
+  <div class="detail" id="detail">
+    <div class="empty">
+      <div class="icon">📊</div>
+      <div>Open a trajectory JSON file to explore</div>
+      <div style="margin-top:6px;font-size:12px;color:var(--muted)">Supports ATIF v1.x · use ↑↓ to navigate steps</div>
+    </div>
+  </div>
+</div>
+
+<div class="summary-bar" id="summaryBar">
+  <span>Ready — open a trajectory file</span>
+</div>
+
+<script>
+let trajectory = null;
+let allSteps   = [];
+let activeStep = null;
+
+// ── File loading ──────────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try { loadTrajectory(JSON.parse(ev.target.result)); }
+    catch(err) { alert('Failed to parse JSON: ' + err.message); }
+  };
+  reader.readAsText(file);
+  e.target.value = ''; // allow re-opening same file
+});
+
+function loadTrajectory(t) {
+  trajectory = t;
+  allSteps   = t.steps || [];
+
+  const fm     = t.final_metrics || {};
+  const fmEx   = fm.extra || {};
+  const agent  = t.agent  || {};
+  const cacheR = fmEx.total_cache_read_input_tokens     || 0;
+  const cacheW = fmEx.total_cache_creation_input_tokens || 0;
+  const output = fm.total_completion_tokens || 0;
+  const baseIn = (fm.total_prompt_tokens || 0) - cacheR - cacheW;
+  const cost   = (baseIn/1e6)*3 + (cacheW/1e6)*3.75 + (cacheR/1e6)*0.30 + (output/1e6)*15;
+
+  document.getElementById('metaBar').innerHTML = `
+    <span class="badge badge-model">${esc(agent.model_name||'?')} v${esc(agent.version||'?')}</span>
+    <span class="badge badge-steps">${allSteps.length} steps</span>
+    <span class="badge badge-cost">~$${cost.toFixed(3)}</span>
+    <span style="font-size:11px;color:var(--muted)">session ${(t.session_id||'').slice(0,8)}…</span>
+  `;
+
+  document.getElementById('summaryBar').innerHTML = `
+    <span>prompt: <strong>${fmt(fm.total_prompt_tokens)}</strong></span>
+    <span>cache read: <strong>${fmt(cacheR)}</strong></span>
+    <span>cache write: <strong>${fmt(cacheW)}</strong></span>
+    <span>output: <strong>${fmt(output)}</strong></span>
+    <span>est. cost: <strong>$${cost.toFixed(3)}</strong></span>
+  `;
+
+  renderStepList(allSteps);
+  if (allSteps.length) selectStep(allSteps[0]);
+}
+
+// ── Step list ────────────────────────────────────────────────────────────────
+function dotColor(step) {
+  if (step.source === 'user')                                return '#3b82f6';
+  if (step.tool_calls && step.tool_calls.length)            return '#f59e0b';
+  if (step.reasoning_content && !step.message?.trim())      return '#8b5cf6';
+  return '#10b981';
+}
+
+function stepLabel(step) {
+  if (step.source === 'user') {
+    const m = (step.message || '').replace(/\n/g,' ').trim();
+    return m.slice(0, 55) || '(user message)';
+  }
+  if (step.tool_calls && step.tool_calls.length) {
+    const names = step.tool_calls.map(tc => tc.function_name).join(', ');
+    // Show first arg value as hint
+    const firstArg = Object.values(step.tool_calls[0].arguments||{})[0];
+    const hint = typeof firstArg === 'string' ? firstArg.split('\n')[0].slice(0,35) : '';
+    return hint ? `${names}: ${hint}` : names;
+  }
+  if (step.reasoning_content) {
+    return step.reasoning_content.replace(/\n/g,' ').trim().slice(0,55) || '(thinking)';
+  }
+  const m = (step.message||'').replace(/\n/g,' ').trim();
+  return m.slice(0,55) || '(agent)';
+}
+
+function renderStepList(steps) {
+  const list = document.getElementById('stepList');
+  list.innerHTML = '';
+  if (!steps.length) {
+    list.innerHTML = '<div class="empty" style="padding:20px 8px;font-size:12px">No results</div>';
+    return;
+  }
+  steps.forEach(step => {
+    const el  = document.createElement('div');
+    el.className = 'step-item';
+    el.dataset.stepId = step.step_id;
+
+    const hasTool = step.tool_calls && step.tool_calls.length;
+    const toolName = hasTool ? step.tool_calls[0].function_name : '';
+
+    el.innerHTML = `
+      <span class="step-num">${step.step_id}</span>
+      <span class="step-dot" style="background:${dotColor(step)}"></span>
+      <span class="step-label">${esc(stepLabel(step))}</span>
+      ${hasTool ? `<span class="step-tool-badge">${esc(toolName)}</span>` : ''}
+    `;
+    el.addEventListener('click', () => selectStep(step));
+    list.appendChild(el);
+  });
+}
+
+function filterSteps() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (!q) { renderStepList(allSteps); return; }
+  renderStepList(allSteps.filter(s => {
+    const check = [
+      stepLabel(s),
+      s.message || '',
+      s.reasoning_content || '',
+      (s.tool_calls||[]).map(tc => tc.function_name + ' ' + JSON.stringify(tc.arguments)).join(' '),
+      (s.observation?.results||[]).map(r => r.content||'').join(' '),
+    ].join(' ').toLowerCase();
+    return check.includes(q);
+  }));
+}
+
+// ── Detail render ────────────────────────────────────────────────────────────
+function selectStep(step) {
+  activeStep = step;
+  document.querySelectorAll('.step-item').forEach(el =>
+    el.classList.toggle('active', +el.dataset.stepId === step.step_id)
+  );
+  const el = document.querySelector(`.step-item[data-step-id="${step.step_id}"]`);
+  if (el) el.scrollIntoView({ block: 'nearest' });
+  renderDetail(step);
+}
+
+function renderDetail(step) {
+  const d = document.getElementById('detail');
+  const parts = [];
+
+  // ── Header row
+  const ts = step.timestamp ? new Date(step.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '';
+  parts.push(`
+    <div class="step-header">
+      <span class="step-source ${step.source==='user'?'source-user':'source-agent'}">${step.source.toUpperCase()}</span>
+      <span class="step-id-badge">Step ${step.step_id}</span>
+      ${step.model_name ? `<span class="step-model">🤖 ${esc(step.model_name)}</span>` : ''}
+      ${ts ? `<span class="step-ts">⏱ ${ts}</span>` : ''}
+    </div>
+  `);
+
+  // ── Thinking
+  if (step.reasoning_content) {
+    parts.push(collapsibleSection(
+      'thinking', '💭 Thinking',
+      `<div class="section-body">${esc(step.reasoning_content)}</div>`,
+      false
+    ));
+  }
+
+  // ── Agent message (skip the boring "Executed X toolu_..." labels)
+  const rawMsg = (step.message || '').trim();
+  const isBoring = /^Executed \w+ toolu_\w+$/.test(rawMsg);
+  if (rawMsg && !isBoring) {
+    const isUser = step.source === 'user';
+    const body   = isUser ? renderMarkdown(rawMsg) : esc(rawMsg);
+    parts.push(collapsibleSection(
+      'message', isUser ? '👤 User Message' : '💬 Agent Message',
+      `<div class="section-body md">${body}</div>`,
+      false
+    ));
+  }
+
+  // ── Tool calls
+  (step.tool_calls || []).forEach(tc => {
+    const args   = tc.arguments || {};
+    const argRows = Object.entries(args).map(([k, v]) => {
+      const raw = typeof v === 'string' ? v : JSON.stringify(v, null, 2);
+      const isBash = tc.function_name === 'Bash' && k === 'command';
+      const cls  = isBash ? 'bash-cmd' : '';
+      return `<div class="arg-key-row">${esc(k)}</div>
+              <div class="arg-val-block"><span class="${cls}">${esc(raw)}</span></div>`;
+    }).join('');
+
+    const inner = `
+      <div class="tool-block">
+        <div class="tool-name-row">
+          <span class="fn-name">${esc(tc.function_name)}</span>
+          <span class="call-id">${esc(tc.tool_call_id)}</span>
+        </div>
+        <div class="arg-row">${argRows}</div>
+      </div>`;
+
+    parts.push(collapsibleSection('tool', `🔧 Tool — ${esc(tc.function_name)}`, inner, false));
+  });
+
+  // ── Observations
+  const results = step.observation?.results || [];
+  results.forEach((r, i) => {
+    const content = r.content || '';
+    const truncate = content.length > 10000;
+    const display  = truncate ? content.slice(0, 10000) : content;
+    const label    = results.length > 1 ? `📥 Observation ${i+1}` : '📥 Observation';
+    const extra    = truncate ? `<span style="margin-left:auto;font-size:10px;color:#f59e0b">${content.length.toLocaleString()} chars — showing 10k</span>` : '';
+
+    parts.push(collapsibleSection(
+      'obs', label,
+      `<div class="section-body mono">${esc(display)}${truncate?'\n…':''}` +
+      `</div>`,
+      false,
+      extra
+    ));
+  });
+
+  // ── Metrics
+  if (step.metrics) {
+    const m  = step.metrics;
+    const ex = m.extra || {};
+    const rows = [
+      metricBox('Prompt',      m.prompt_tokens),
+      metricBox('Completion',  m.completion_tokens),
+      metricBox('Cache Read',  ex.cache_read_input_tokens),
+      metricBox('Cache Write', ex.cache_creation_input_tokens),
+      metricBox('Tier',        ex.service_tier, false),
+    ].filter(Boolean).join('');
+
+    parts.push(collapsibleSection(
+      'metrics', '📊 Token Metrics',
+      `<div class="metrics-row">${rows}</div>`,
+      true  // collapsed by default
+    ));
+  }
+
+  d.innerHTML = parts.join('');
+
+  // Attach collapse toggles
+  d.querySelectorAll('.section-title').forEach(title => {
+    title.addEventListener('click', () => {
+      const body = title.nextElementSibling;
+      const isHidden = body.classList.toggle('hidden');
+      title.classList.toggle('collapsed', isHidden);
+    });
+  });
+}
+
+function collapsibleSection(cls, label, innerHtml, startCollapsed=false, extraTitle='') {
+  const bodyClass = startCollapsed ? 'hidden' : '';
+  const titleClass = startCollapsed ? 'collapsed' : '';
+  return `
+    <div class="section">
+      <div class="section-title ${cls} ${titleClass}">
+        ${label}${extraTitle}
+        <i class="chevron">▾</i>
+      </div>
+      <div class="${bodyClass}">${innerHtml}</div>
+    </div>`;
+}
+
+function metricBox(label, value, isNum=true) {
+  if (value == null) return '';
+  const display = isNum && typeof value === 'number' ? value.toLocaleString() : value;
+  const color   = label==='Prompt'     ? '#7dd3fc'
+                : label==='Completion' ? '#6ee7b7'
+                : label==='Cache Read' ? '#c4b5fd'
+                : label==='Cache Write'? '#fde68a'
+                : '#94a3b8';
+  return `<div class="metric">
+    <span class="metric-label">${label}</span>
+    <span class="metric-value" style="color:${color}">${display}</span>
+  </div>`;
+}
+
+// ── Minimal Markdown renderer ─────────────────────────────────────────────────
+function renderMarkdown(text) {
+  let h = esc(text);
+  h = h.replace(/^### (.+)$/gm,  '<h3>$1</h3>');
+  h = h.replace(/^## (.+)$/gm,   '<h2>$1</h2>');
+  h = h.replace(/^# (.+)$/gm,    '<h1>$1</h1>');
+  h = h.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  h = h.replace(/`([^`]+)`/g,    '<code>$1</code>');
+  h = h.replace(/^---+$/gm,      '<hr>');
+  h = h.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
+  h = h.replace(/(<li>[\s\S]*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
+  h = h.replace(/\n\n+/g, '</p><p>');
+  return `<p>${h}</p>`;
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(n) { return n ? (+n).toLocaleString() : '0'; }
+
+// ── Keyboard nav ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (!allSteps.length || !activeStep) return;
+  if (document.activeElement.tagName === 'INPUT') return;
+  const idx = allSteps.findIndex(s => s.step_id === activeStep.step_id);
+  if (e.key === 'ArrowDown' && idx < allSteps.length-1) { e.preventDefault(); selectStep(allSteps[idx+1]); }
+  if (e.key === 'ArrowUp'   && idx > 0)                 { e.preventDefault(); selectStep(allSteps[idx-1]); }
+});
+
+// ── Load trajectory list from server ─────────────────────────────────────────
+fetch('trajectories.json')
+  .then(r => r.ok ? r.json() : null)
+  .then(list => {
+    if (!list || !list.length) return;
+    const sel = document.getElementById('trajSelect');
+    if (sel) {
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.url;
+        opt.textContent = item.label;
+        sel.appendChild(opt);
+      });
+      sel.style.display = '';
+      // Auto-load the most recent
+      loadFromUrl(list[0].url);
+    }
+  })
+  .catch(() => {});
+
+function loadFromUrl(url) {
+  fetch(url)
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d) loadTrajectory(d); })
+    .catch(() => {});
+}
+</script>
+</body>
+</html>

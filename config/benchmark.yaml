@@ -1,0 +1,33 @@
+# Benchmark configuration for Paper Reviewer with Claude Opus 4.6
+# Uses Harbor + E2B with real Anthropic API (no proxy)
+
+# Paths
+data_dir: /root/data/harbor/PaperReviews
+results_dir: /root/benchmark/results
+trials_dir: /root/benchmark/trials
+
+# Agent settings
+agent:
+  name: claude-code
+  timeout_sec: 2400  # 40 minutes per paper review
+  max_turns: 64
+  reasoning_effort: high
+
+# Environment
+environment:
+  type: e2b
+  force_build: true
+  cpus: 2
+  memory_mb: 2048
+  storage_mb: 2048
+
+# Search API (running on the same machine)
+search_api_url: http://216.166.148.134:28597
+
+# LLM Judge settings
+judge:
+  model: gemini-3-flash-preview
+  base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+
+# Concurrency
+max_concurrent: 2

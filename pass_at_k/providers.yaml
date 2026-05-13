@@ -1,0 +1,45 @@
+# Provider catalog for the pass@K stream_proxy.
+#
+# Each entry is a named config. `switch_provider.sh <name>` picks an entry,
+# updates /root/.env, restarts the proxy, and runs an end-to-end verification
+# ping before handing control back.
+#
+# The API key is read from the environment variable named in `api_key_env`.
+# The key must be set in /root/.env or the user's shell before switching.
+#
+# max_tokens_cap is the hard ceiling the proxy will enforce on outgoing
+# /chat/completions requests. Raise it for reasoning-heavy models that burn
+# tokens on thinking before emitting final content.
+
+fireworks-minimax-m2p7:
+  base_url: https://api.fireworks.ai/inference/v1
+  model: accounts/fireworks/models/minimax-m2p7
+  api_key_env: FIREWORKS_API_KEY
+  max_tokens_cap: 16384
+  notes: MiniMax-M2.7 via Fireworks router. Non-reasoning, 16K ceiling sufficient.
+
+fireworks-kimi-k2p5:
+  base_url: https://api.fireworks.ai/inference/v1
+  model: accounts/fireworks/routers/kimi-k2p5-turbo
+  api_key_env: FIREWORKS_API_KEY
+  max_tokens_cap: 16384
+  notes: Kimi K2.5 via Fireworks router. Baseline config from the original paper.
+
+deepinfra-qwen3p6-35b-a3b:
+  base_url: https://api.deepinfra.com/v1/openai
+  model: Qwen/Qwen3.6-35B-A3B
+  api_key_env: DEEPINFRA_API_KEY
+  max_tokens_cap: 32768
+  notes: |
+    Qwen3.6 35B (A3B MoE) via DeepInfra. Reasoning model — burns ~1-2K
+    tokens per turn on `reasoning_content` (stripped by proxy) before
+    emitting final `content`. Raise cap to 32K.
+
+deepinfra-glm-5p1:
+  base_url: https://api.deepinfra.com/v1/openai
+  model: zai-org/GLM-5.1
+  api_key_env: DEEPINFRA_API_KEY
+  max_tokens_cap: 32768
+  notes: |
+    GLM-5.1 via DeepInfra. Reasoning model; same reasoning_content pattern
+    as Qwen, 32K cap required.
