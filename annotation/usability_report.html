@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Report — Understanding image motion with group representations</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         margin: 0; padding: 0; background: #f8fafc; color: #1e293b; line-height: 1.5; }
+  a { color: #2563eb; }
+  code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px;
+          font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12px; }
+  blockquote { margin: 0; }
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);color:white;
+     padding:32px 40px;margin-bottom:0;">
+  <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;">Review Usability Report</h1>
+  <div style="font-size:14px;opacity:0.85;">Understanding image motion with group representations</div>
+  <div style="font-size:12px;opacity:0.65;margin-top:4px;">
+    22 claims extracted · Model: deepseek-v4-flash · Cutoff: 2017-11
+  </div>
+</div><div style="padding:24px 40px;"><h2 style="font-size:18px;color:#1e293b;margin:0 0 16px;">
+  ⚡ Confidence Triage — Where to focus first</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px;">
+  <div style="background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#15803d;font-size:16px;">12 claims</div>
+    <div style="font-weight:600;color:#166534;margin:4px 0;">High confidence</div>
+    <div style="font-size:12px;color:#166534;">Directly verified against paper or search.
+    Address these first — reviewer likely correct.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      <a href="#S1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S1</a> <a href="#S2" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S2</a> <a href="#S4" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S4</a> <a href="#W1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W1</a> <a href="#MC1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">MC1</a> <a href="#W2" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W2</a> <a href="#W3" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W3</a> <a href="#W4" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W4</a> <a href="#W5" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W5</a> <a href="#W6" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W6</a> <a href="#SG1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">SG1</a> <a href="#Q4" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">Q4</a>
+    </div>
+  </div>
+  <div style="background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#b45309;font-size:16px;">10 claims</div>
+    <div style="font-weight:600;color:#92400e;margin:4px 0;">Medium confidence</div>
+    <div style="font-size:12px;color:#92400e;">Plausible but not fully verified.
+    Review carefully — may be correct or off-base.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      <a href="#S3" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">S3</a> <a href="#MG1" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">MG1</a> <a href="#SG2" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG2</a> <a href="#SG3" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG3</a> <a href="#SG4" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG4</a> <a href="#SG5" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG5</a> <a href="#SG6" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG6</a> <a href="#Q1" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">Q1</a> <a href="#Q2" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">Q2</a> <a href="#Q3" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">Q3</a>
+    </div>
+  </div>
+  <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#dc2626;font-size:16px;">0 claims</div>
+    <div style="font-weight:600;color:#991b1b;margin:4px 0;">Low confidence</div>
+    <div style="font-size:12px;color:#991b1b;">Based on LLM reasoning only.
+    These may be wrong — verify before acting on them.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      
+    </div>
+  </div>
+</div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Weaknesses &amp; Methodology Gaps
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>7 issues</span>
+</h2>
+  <div id="W1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W1]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The primary quantitative result (Table 2) shows that linear regression from the learned embedding outperforms a mean-baseline on KITTI odometry, but the improvements are modest (4–21% for most parameters) and the method is consistently outperformed by Flow+PCA even with only 4 principal components on most metrics.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Table 2: Linear regression from the learned embedding to the translation and rotation of the KITTI odometry dataset consistently performs better than chance (guessing the mean value). Table entries show mean squared error ± standard error (percent improvement).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer critiques the modest performance gains shown in Table 2 (labeled as Table 2 in the review, though appearing as Table 2 in the text) compared to the Flow+PCA baseline.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 218 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">For Translation X: Ours 5.05 (14.71% improvement), Flow+PCA 4PC: 3.18 (46.27%)... So the method does better than Flow+PCA (4 PCs) on Y and Z translation, but worse on X. The method also does worse on every rotation metric compared to Flow+PCA (4 PCs).</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W2]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The main experiment (linear regression from embeddings to camera pose) measures how much motion information is linearly accessible from the embedding, not the quality of the representation itself.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We compute the representation on all two-frame sequences of KITTI visual odometry, which are labeled with ground truth camera poses. We then linearly regress from these representations to the change in camera pose between the frames using least squares.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer argues that linear regression to camera pose only measures linear accessibility of information, not overall representation quality.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 271 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The KITTI evaluation is limited to linear regression from the learned embedding to camera poses, which is a very indirect measure of representation quality.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W3]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The interpolation experiment (Table 3) moves in this direction but uses an extremely weak baseline (pixelwise Euclidean distance), which any learned metric would be expected to beat.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Table 3: Interpolation distances on KITTI (as in Figure 5), averaged across test data. Distances are consistently lower for the true frame than for visually similar frames (inside sequence) and dissimilar frames (outside sequence) when using the embedding, but not the Euclidean distance.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer critiques the use of a weak baseline (Euclidean distance) in the interpolation experiment shown in Table 3.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 252 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The &quot;interpolation&quot; experiment in Table 3 is interesting but doesn&#x27;t demonstrate practical utility. The Euclidean distance baseline is extremely weak (just pixel distance).</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W4]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The &quot;group composition&quot; operator ∘ is approximated by an LSTM; associativity is only softly encouraged through the loss function, not architecturally guaranteed.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">The functions Φ and ⋄ are implemented as a convolutional neural network (CNN) and a recurrent neural network (RNN), respectively. We use a long short-term memory (LSTM) RNN... Associativity is encouraged by pushing differently composed sequences with equivalent motion to the same representation.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer points out that the LSTM only approximates composition and associativity is a soft loss constraint rather than an architectural guarantee.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 156 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The &quot;composition operator&quot; ∘ is implemented as an LSTM, which means the associativity property is only approximately enforced through a loss function rather than being architecturally guaranteed.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W5" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W5]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The method is trained on sequences of 3–5 frames and tested on sequences of up to 12 frames (line 145).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">In all experiments, CNN-LSTMs were trained on sequences 3-5 images in length. We tested MNIST networks with sequences of up to 12 images with similar results.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer notes the discrepancy between the short training sequences and the testing on longer sequences.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 207 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer verified present in paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The method doesn&#x27;t scale well: &quot;We tested MNIST networks with sequences of up to 12 images with similar results&quot; (line 145) — but 12 images is still very short.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W6" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W6]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">Table 1 shows that a network with single-image input performs at near-chance levels on the embedding error, which the paper attributes to the absence of motion information.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Table 1: Average embedding error (equation 2) on held-out data. ... Single image | Inequivalent | 0.79 | 3.5</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer notes that Table 1 shows single-image inputs perform poorly, which the authors use to justify the need for image pairs to capture motion.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 158 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Table 1: Average embedding error on held-out data... The &quot;Single image&quot; baseline (where CNN sees single frames) gets 0.74 and 0.79 — much worse, confirming that motion information is being captured.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="MG1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#a855f718;border-bottom:3px solid #a855f7;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#a855f7;font-size:13px;">[MG1]</span>
+      <span style="font-weight:600;color:#a855f7;font-size:13px;">Methodology Gap</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #a855f7;padding-left:12px;">a stronger baseline would compare against other unsupervised video representation methods (e.g., Misra et al. 2016; Wang &amp; Gupta 2015) on the same embedding accuracy metric.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #a855f7;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We present evidence that the learned representation captures the global structure of motion in both 2D and 3D settings without labels, hard-coded assumptions about the scene, or explicit feature matching.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer suggests that the methodology is missing a comparison to other unsupervised video representation methods like Misra et al. 2016.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 68 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper DOES cite: Jayaraman &amp; Grauman 2015, Agrawal et al. 2015, Misra et al. 2016... a stronger baseline would compare against other unsupervised video representation methods (e.g., Misra et al. 2016; Wang &amp; Gupta 2015) on the same embedding accuracy metric.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Citation Gap Analysis
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>1 missing references</span>
+</h2>
+  <div id="gap-MC1" style="border:2px solid #eab308;border-radius:8px;
+       margin-bottom:20px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.10);">
+    <div style="background:#eab30822;border-bottom:3px solid #eab308;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:18px;">🔗</span>
+      <span style="font-weight:700;color:#854d0e;font-size:14px;">
+        Citation Gap [MC1]</span>
+      <span style="font-size:13px;color:#713f12;">SfMLearner, Zhou et al., CVPR 2017</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;
+           margin-bottom:12px;">
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+          
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Your paper — where citation belongs</div>
+      <blockquote style="margin:0;padding:10px 12px;background:#fefce8;
+           border-left:3px solid #eab308;border-radius:0 6px 6px 0;
+           font-family:monospace;font-size:13px;color:#1e293b;
+           white-space:pre-wrap;">Other works that learn from sequences typically focus on static image content rather than motion.</blockquote>
+        </div>
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+          
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Missing paper</div>
+      <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:4px;">
+        Unsupervised Learning of Depth and Ego-Motion from Video</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px;">
+        arXiv:1704.07813 · 2876 citations</div>
+      <div style="font-size:13px;color:#334155;line-height:1.5;">
+        We present an unsupervised learning framework for the task of monocular depth and camera motion estimation from unstructured video sequences. We achieve this by simultaneously training depth and camera pose estimation networks using the task of view synthesis as the supervisory signal. The networks are thus coupled via the view synthesis objective during training, but can be applied independently ...</div>
+        </div>
+      </div>
+      <div style='background:#fffbeb;border:1px solid #fef08a;border-radius:6px;padding:10px 12px;font-size:13px;color:#713f12;font-style:italic;margin-bottom:10px;'>Zhou et al. 2017 (SfMLearner) - 1704.07813. This paper is from April 2017, well before the paper&#x27;s submission (2018-02)... This is a significant missing comparison... the paper doesn&#x27;t cite Zhou et al. 2017 (SfMLearner).</div>
+      
+    <div style="margin-top:14px;background:#f0f9ff;border:1px solid #bae6fd;
+         border-radius:6px;padding:12px 14px;">
+      <div style="font-size:11px;color:#0369a1;font-weight:600;
+           text-transform:uppercase;margin-bottom:8px;">How to respond</div>
+      <div style="font-size:13px;color:#0c4a6e;line-height:1.7;">
+        <strong>Option A — Cite &amp; compare:</strong>
+        Add a citation and brief comparison in your related work or experiments.<br>
+        <strong>Option B — Scope argument:</strong>
+        Explain why this paper is out of scope (different setting, later work, etc.).<br>
+        <strong>Option C — Acknowledge:</strong>
+        Add to limitations or future work section.
+      </div>
+    </div>
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Strengths
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>4 positives identified</span>
+</h2>
+  <div id="S1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S1]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">Using the group properties of motion (associativity, invertibility, identity) as explicit learning constraints is a creative departure from dominant paradigms based on pixel reconstruction (optical flow) or photometric consistency (view synthesis).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We propose a model of motion based on elementary group properties of transformations and use it to train a representation of image motion. While most methods of estimating motion are based on pixel-level constraints, we use these group properties to constrain the abstract representation of motion itself.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer highlights the novelty of using group properties (associativity, invertibility, identity) as constraints instead of standard pixel-level or photometric methods.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 54 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer verified present in paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper is about learning motion representations from unlabeled video using group properties (associativity, invertibility, identity) as learning constraints... Using group properties (associativity, invertibility, identity) to constrain motion representation learning</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S2]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The formalization of motion as a group acting on a latent structure space (Section 3.1), with the goal of learning an approximate group homomorphism, provides a clean mathematical foundation that separates the representation from domain-specific assumptions like rigidity or known camera parameters.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We base our method on the observation that the set of 3D scene motions, equipped with the composition operation, forms a group. This group describes the latent structure of transformations in continuous, real-world image sequences. By learning an embedding that captures the transformations in scenes that occur during motion, we approximate a group homomorphism</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>This passage in Section 3.1 establishes the mathematical foundation of motion as a group acting on latent structure and the goal of learning a homomorphism.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 122 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper is about learning motion representations from unlabeled video using group properties... 3.1 GROUP PROPERTIES OF MOTION</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S3]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">Unlike SfM/SLAM (which assume rigidity) or optical flow (which assumes brightness constancy), the proposed constraints apply to any setting with continuous motion.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">The most common global representations of motion are structure from motion (SfM) and simultaneous localization and mapping (SLAM)... These approaches... are unable to represent non-rigid or independent motions. The most commonly used local representation is optical flow... these works use photometric, local constraints.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer contrasts the proposed method&#x27;s general applicability with the limitations of SfM, SLAM (rigidity), and optical flow (photometric constraints).</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 96 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The method is general and doesn&#x27;t make domain-specific assumptions (rigid world, known camera parameters, etc.)</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S4]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The paper acknowledges that results are not competitive with self-supervised flow or SOTA odometry (Section 4.2), that action recognition failed (&quot;unable to obtain competitive performance&quot;, line 285), and that the model cannot handle cuts or rapid appearance changes (line 80).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We attempted to regress from our learned representation to action classes but were unable to obtain competitive performance. ... Our method assumes the scene has a relatively stable structure, and we do not expect it to handle rapidly changing content or sequence cuts.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer notes the author&#x27;s transparency regarding the failure in action recognition and the model&#x27;s inability to handle sequence cuts.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 294 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer verified present in paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper acknowledges that results are not competitive with self-supervised flow or SOTA odometry (Section 4.2)... action recognition failed (&quot;unable to obtain competitive performance&quot;, line 285)... 285:[Omitted long matching line] 339:Karen Simonyan and Andrew Zissermann. Two-stream convolutional networks for action recognition in videos.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Reviewer Questions
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>Answer these in your rebuttal</span>
+</h2>
+  <div id="Q1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q1]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">How well does the learned composition operator satisfy the group axioms quantitatively? If we randomly sample two motions from the embedding and compose them, does &quot;compose then embed&quot; approximately equal &quot;embed then compose&quot; (the homomorphism property)?</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #3b82f6;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We also learn a corresponding composition operator ⋄ : M → M that emulates the composition of elements in M. This representation and operator should respect the properties of the motion group in question.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer asks for a quantitative evaluation of how well the learned operator ⋄ actually satisfies the homomorphism property.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 130 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">How well does the learned composition operator satisfy the group axioms quantitatively? If we randomly sample two motions from the embedding and compose them, does &quot;compose then embed&quot; approximately equal &quot;embed then compose&quot; (the homomorphism property)?</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="Q2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q2]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">Would the approach benefit from architectural guarantees (e.g., using a Lie group parameterization for the embedding space) rather than soft loss-based constraints?</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #3b82f6;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">The functions Φ and ⋄ are implemented as a convolutional neural network (CNN) and a recurrent neural network (RNN), respectively.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer asks if a Lie group parameterization would be better than the current standard CNN/RNN architecture.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 156 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Would the approach benefit from architectural guarantees (e.g., using a Lie group parameterization for the embedding space) rather than soft loss-based constraints?</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="Q3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q3]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">How are the &quot;recomposed subsequences&quot; constructed for real data where ground-truth motion is unknown? Are there failure cases where the associativity assumption (same motion via different paths) is violated?</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #3b82f6;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We include six recomposed subsequences for each training sequence: two forward, two backward, and two identity subsequences, as shown in Figure 2 (b). Subsequences are sampled such that all three sequence types share some of their frames.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer asks how these subsequences are constructed when ground truth is unknown and if the associativity assumption ever fails.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 186 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">How are the &quot;recomposed subsequences&quot; constructed for real data where ground-truth motion is unknown? Are there failure cases where the associativity assumption (same motion via different paths) is violated?</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="Q4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q4]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">The action recognition experiment failed. Was this attempted with a linear classifier on the frozen embedding, or with fine-tuning? What was the performance gap relative to the two-stream baseline (Simonyan &amp; Zisserman, 2014)?</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #3b82f6;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We attempted to regress from our learned representation to action classes but were unable to obtain competitive performance. ... previous work has shown spatial features are more discriminative for this task, and motion features require extensive processing to be useful (e.g. (Simonyan &amp; Zisserman, 2014)).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer asks for more details on the failed action recognition experiment and the gap compared to the cited Simonyan &amp; Zisserman paper.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 294 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer verified present in paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The action recognition experiment failed... What was the performance gap relative to the two-stream baseline (Simonyan &amp; Zisserman, 2014)?</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Suggestions for Improvement
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>6 actionable items</span>
+</h2>
+  <div id="SG1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG1]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Add SfMLearner (Zhou et al., CVPR 2017) as a comparison point.</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">🔍 Found in literature search</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Missing comparison to SfMLearner (Zhou et al., CVPR 2017, arXiv:1704.07813)... Add SfMLearner (Zhou et al., CVPR 2017) as a comparison point.</div>
+        </div>
+      
+        <div style="margin-top:10px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Supporting literature</div>
+          <ul style="margin:0;padding-left:18px;font-size:13px;color:#334155;"><li style="margin:2px 0;"><code style="font-size:12px;">[1704.07813]</code> Unsupervised Learning of Depth and Ego-Motion from Video</li></ul>
+        </div>
+    </div>
+  </div>
+  <div id="SG2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG2]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Ablate the group constraints. Train variants of the model with (i) only the associativity loss, (ii) only the invertibility loss, (iii) no group constraints (random pairing), and (iv) the full model.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We use an embedding loss to approximately enforce associativity and invertibility among subsequences sampled from an image sequence. Associativity is encouraged by pushing differently composed sequences with equivalent motion to the same representation.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer suggests ablating the specific group constraints (associativity vs invertibility) described in Section 3.2.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 145 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Ablate the group constraints. Train variants of the model with (i) only the associativity loss, (ii) only the invertibility loss...</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG3]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Test the composition operator over longer horizons. Evaluate whether composing motions (via the LSTM) over sequences of 20–50 frames maintains coherent representations, or whether error accumulates.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">The LSTM operates over the sequence of CNN outputs to produce an embedding sequence [R1,2, ..., Rt−1,t]. We treat R({It}) = Rt−1,t as the embedding of sequence {It}.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer suggests testing if this LSTM-based composition holds up over much longer horizons (20-50 frames).</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 156 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Test the composition operator over longer horizons. Evaluate whether composing motions (via the LSTM) over sequences of 20–50 frames maintains coherent representations...</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG4]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Add a more meaningful baseline for the interpolation experiment. Instead of or in addition to pixelwise Euclidean distance, compare against features from a network trained on ImageNet, or against a recent self-supervised video representation (e.g., Misra et al., 2016).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We compare our method to a Euclidean distance, computed as the mean pixelwise distance between the probe image and either I1 or IT (whichever is smaller).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer suggests replacing or supplementing the weak Euclidean baseline in the interpolation experiment.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 277 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Add a more meaningful baseline for the interpolation experiment. Instead of or in addition to pixelwise Euclidean distance, compare against features from a network trained on ImageNet...</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG5" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG5]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Directly evaluate the representation on a non-rigid setting. A simple experiment on human motion (e.g., the Penn Action dataset or a subset of UCF-101) with a similarly indirect evaluation (e.g., linear classification of action type from the embedding) would help substantiate this claim.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Our results demonstrate that this representation is useful for learning motion in the general setting where explicit labels are difficult to obtain.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer suggests testing on non-rigid human motion datasets to substantiate the claim of general motion representation.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 54 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Directly evaluate the representation on a non-rigid setting. A simple experiment on human motion (e.g., the Penn Action dataset or a subset of UCF-101)...</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG6" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG6]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Clarify what the &quot;chance&quot; baseline means for pose regression. Reporting confidence intervals or p-values for the improvement would contextualize the results.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Table 2: Linear regression from the learned embedding to the translation and rotation of the KITTI odometry dataset consistently performs better than chance (guessing the mean value).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer asks for clarification on the &#x27;chance&#x27; baseline used in the pose regression table.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 218 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Clarify what the &quot;chance&quot; baseline means for pose regression. Reporting confidence intervals or p-values for the improvement would contextualize the results.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Rebuttal Stubs
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>Templates for major weaknesses</span>
+</h2><p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+  Fill in the blanks — these are starting points for your rebuttal response.</p>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W1] The primary quantitative result (Table 2) shows that linear regression from the learned embedding outperforms a mean-bas...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;Table 2: Linear regression from the learned embedding to the translation and rot...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W2] The main experiment (linear regression from embeddings to camera pose) measures how much motion information is linearly ...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;We compute the representation on all two-frame sequences of KITTI visual odometr...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W4] The &quot;group composition&quot; operator ∘ is approximated by an LSTM; associativity is only softly encouraged through the loss ...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;The functions Φ and ⋄ are implemented as a convolutional neural network (CNN) an...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W5] The method is trained on sequences of 3–5 frames and tested on sequences of up to 12 frames (line 145)....</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;In all experiments, CNN-LSTMs were trained on sequences 3-5 images in length. We...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [MG1] a stronger baseline would compare against other unsupervised video representation methods (e.g., Misra et al. 2016; Wang...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;We present evidence that the learned representation captures the global structur...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div></div>
+<div style="background:#f1f5f9;border-top:1px solid #e2e8f0;padding:20px 40px;
+     font-size:12px;color:#94a3b8;text-align:center;">
+  Generated by ReviewGenie Annotation Pipeline
+</div>
+</body></html>

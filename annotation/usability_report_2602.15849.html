@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Report — Reinforcement Learning for Peer Review Question Generation</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         margin: 0; padding: 0; background: #f8fafc; color: #1e293b; line-height: 1.5; }
+  a { color: #2563eb; }
+  code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px;
+          font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12px; }
+  blockquote { margin: 0; }
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);color:white;
+     padding:32px 40px;margin-bottom:0;">
+  <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;">Review Usability Report</h1>
+  <div style="font-size:14px;opacity:0.85;">Reinforcement Learning for Peer Review Question Generation</div>
+  <div style="font-size:12px;opacity:0.65;margin-top:4px;">
+    30 claims extracted · Model: deepseek-v4-flash · Cutoff: 2025-11
+  </div>
+</div><div style="padding:24px 40px;"><h2 style="font-size:18px;color:#1e293b;margin:0 0 16px;">
+  ⚡ Confidence Triage — Where to focus first</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px;">
+  <div style="background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#15803d;font-size:16px;">28 claims</div>
+    <div style="font-weight:600;color:#166534;margin:4px 0;">High confidence</div>
+    <div style="font-size:12px;color:#166534;">Directly verified against paper or search.
+    Address these first — reviewer likely correct.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      <a href="#S1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S1</a> <a href="#S2" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S2</a> <a href="#S3" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S3</a> <a href="#S4" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S4</a> <a href="#S5" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S5</a> <a href="#S6" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">S6</a> <a href="#W1" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W1</a> <a href="#W2" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W2</a> <a href="#W3" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W3</a> <a href="#W4" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W4</a> <a href="#W5" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W5</a> <a href="#W6" style="color:#15803d;text-decoration:none;background:#bbf7d0;padding:1px 5px;border-radius:3px;margin:1px;">W6</a>
+    </div>
+  </div>
+  <div style="background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#b45309;font-size:16px;">2 claims</div>
+    <div style="font-weight:600;color:#92400e;margin:4px 0;">Medium confidence</div>
+    <div style="font-size:12px;color:#92400e;">Plausible but not fully verified.
+    Review carefully — may be correct or off-base.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      <a href="#SG4" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG4</a> <a href="#SG5" style="color:#b45309;text-decoration:none;background:#fef9c3;padding:1px 5px;border-radius:3px;margin:1px;">SG5</a>
+    </div>
+  </div>
+  <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:16px;">
+    <div style="font-weight:700;color:#dc2626;font-size:16px;">0 claims</div>
+    <div style="font-weight:600;color:#991b1b;margin:4px 0;">Low confidence</div>
+    <div style="font-size:12px;color:#991b1b;">Based on LLM reasoning only.
+    These may be wrong — verify before acting on them.</div>
+    <div style="margin-top:8px;font-size:12px;">
+      
+    </div>
+  </div>
+</div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Weaknesses &amp; Methodology Gaps
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>13 issues</span>
+</h2>
+  <div id="W1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W1]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#dc2626;color:white">CRITICAL</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">Self-annotation by paper authors is a critical methodological flaw.</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">But in section 6.3 (line 1240): &quot;No external annotators, crowdworkers, or paid participants were used. As paper authors conducting their own research, no compensation was provided for annotation work.&quot; This means the authors annotated their own data, which is a significant methodological concern.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W2]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">Section 6.1 states: &quot;Notably, IntelliAsk-32B achieves the lowest first page bias (21.37%)&quot; (line 495). However, Table 1 shows o3 achieves 16.81% FPB — substantially lower. This claim is incorrect.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Notably, IntelliAsk-32B achieves the lowest first page bias (21.37%), indicating that it draws from the full paper rather than relying primarily on the introduction.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is pointing out a factual error where the text claims IntelliAsk-32B has the lowest FPB, but the table shows o3 is lower.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 495 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer verified present in paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper says &quot;IntelliAsk-32B achieves the lowest first page bias.&quot; But from the table, o3 has lower FPB... o3: FPB = 16.81%, IntelliAsk-32B: FPB = 21.37%. This is factually incorrect.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W3]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">In the human evaluation, IntelliAsk-32B achieves 0.66/3.0. Since each dimension is binary (0 or 1), this means the average question scores fewer than 1 dimension out of 3. Human-authored questions score 1.57/3.0.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Among models, our IntelliAsk-32B achieves a score of 0.66/3.0, outperforming Gemini 2.5 Pro (0.60).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing the low absolute performance of the model in the human evaluation results shown in Table 1.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 495 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">In human evaluation, even the best model (IntelliAsk-32B) scores only 0.66/3.0... With binary scoring, each dimension is 0 or 1, so 0.66/3 means the average question gets less than 1 out of 3 possible points.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W4]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">IntelliReward is used as the training reward signal for IntelliAsk *and* as the automatic evaluation metric (Section 6.2). This creates a circular dependency</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">IntelliReward as judge of its own training: The paper uses IntelliReward for automatic evaluation, but IntelliReward was also used as the reward signal during RL training. This creates a circularity concern.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W5" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W5]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">In the automatic evaluation (Table 2), every SFT-only model essentially scores at floor: OpenReviewer-8B (0.10/3), DeepReviewer-7B (0.10/3), Qwen2.5-7B SFT (0.03/3). These near-zero scores... suggest that IntelliReward may be poorly calibrated for evaluating SFT outputs</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The SFT baselines are essentially at floor... OpenReviewer-8B (0.10/3), DeepReviewer-7B (0.10/3), Qwen2.5-7B SFT (0.03/3). These near-zero scores... suggest that IntelliReward may be poorly calibrated for evaluating SFT outputs</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W6" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W6]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">Section 6.3 claims that &quot;learning to ask better questions transfers to better writing across diverse domains.&quot; However, Table 5 shows very small and inconsistent improvements: BoolQ shows exactly 0 improvement (90.0 vs. 90.0), GPQA improves only 0.7 points, and Arena Hard improves only 0.3 points.</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper claims that &quot;learning to ask better questions transfers to better writing.&quot; But the external benchmarks show only small improvements: BoolQ: 90.0 vs 90.0 (no change), GPQA: 69.1 vs 68.4 (+0.7), Arena Hard: 94.1 vs 93.8 (+0.3)</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W7" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W7]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">IntelliAsk-7B uses DAPO while IntelliAsk-32B uses GRPO (Section 5.3). This makes it impossible to disentangle the effects of model scale from the choice of RL algorithm.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We train IntelliAsk-7B with DAPO\citep{dapo} and IntelliAsk-32B with GRPO.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing the inconsistent use of RL algorithms across different model sizes, which prevents a clean scaling analysis.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 483 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The 32B model uses GRPO while 7B uses DAPO: The paper doesn&#x27;t adequately explain why different RL algorithms are used for different model sizes, making it hard to disentangle the effect of model size from algorithm choice.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W8" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W8]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The Likert pilot exhibited strong bimodality with 85% of scores at extremes (Section 6.6). While the authors switched to binary labels in response, this raises questions about whether the underlying constructs (Effort, Evidence, Grounding) are reliably distinguishable</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The Likert pilot exhibited strong bimodality with 85% of scores at extremes (Section 6.6). While the authors switched to binary labels in response, this raises questions about whether the underlying constructs (Effort, Evidence, Grounding) are reliably distinguishable</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W9" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W9]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The work is limited to ICLR papers and ML/AI domains; generalization to other fields is unexplored.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We collected a dataset of reviewer feedback by scraping all publicly available reviews from ICLR 2024 using the OpenReview API.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing the narrow scope of the dataset, which is limited to ICLR (ML/AI) papers.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 226 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The work is limited to ICLR papers and ML/AI domains; generalization to other fields is unexplored.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W10" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W10]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The question-generation task is framed as producing a single question per paper, while real reviewers typically ask multiple questions spanning different aspects.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">yielding one model-generated question per system.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing the task setup where only a single question is generated, whereas real reviews have many.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 250 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper generates ONE question per paper, but human reviewers typically ask multiple questions. The task formulation may be too narrow.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W11" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W11]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">Multimodal content (figures, tables, equations) is excluded via OCR text extraction, which may disproportionately affect evidence-based question quality.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">we applied \texttt{olmOCR(olmOCR-7B-0825-FP8)}\citep{olmocr} to extract structured text from the first nine pages of each paper.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing the reliance on text extraction which ignores multimodal content like figures and tables.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 235 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">To prepare the corresponding paper content for evaluation and training, we applied olmOCR... to extract structured text from the first nine pages of each paper.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="W12" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#f9731618;border-bottom:3px solid #f97316;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#f97316;font-size:13px;">[W12]</span>
+      <span style="font-weight:600;color:#f97316;font-size:13px;">Weakness</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #f97316;padding-left:12px;">The filtering pipeline removes questions about unreported experiments (Quality Gate 4, Rule 7), which is precisely the type of question an engaged reviewer should ask.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #f97316;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">(see Appendix~\ref{sec:filtering_stages} for detailed filtering methodology and Figure~\ref{fig:waterfall_diagram} for the progressive filtering statistics).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is critiquing a specific filtering rule (Quality Gate 4, Rule 7) mentioned in the filtering methodology.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 234 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Rule 7 in Quality Gate 4: &quot;REJECT questions that request unreported experiments or conjectures beyond the scope of the paper&quot; - but asking about unreported experiments is a legitimate reviewer question!</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="MG1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#a855f718;border-bottom:3px solid #a855f7;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#a855f7;font-size:13px;">[MG1]</span>
+      <span style="font-weight:600;color:#a855f7;font-size:13px;">Methodology Gap</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ea580c;color:white">MAJOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #a855f7;padding-left:12px;">Add RL baselines. Compare against REMOR, ReviewRL, and TreeReview using IntelliReward as a unified evaluation metric.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #a855f7;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We also tested existing SFT-trained reviewer models (OpenReviewer, DeepReviewer, AutoRev) by extracting the \textit{Questions} section of their outputs.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting that the authors should also compare against RL-based baselines, not just the SFT ones mentioned here.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 307 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Compare against more recent baselines (TreeReview, ReviewRL, REMOR)</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Citation Gap Analysis
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>1 missing references</span>
+</h2>
+  <div id="gap-MC1" style="border:2px solid #eab308;border-radius:8px;
+       margin-bottom:20px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.10);">
+    <div style="background:#eab30822;border-bottom:3px solid #eab308;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:18px;">🔗</span>
+      <span style="font-weight:700;color:#854d0e;font-size:14px;">
+        Citation Gap [MC1]</span>
+      <span style="font-size:13px;color:#713f12;">REMOR, ReviewRL</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;
+           margin-bottom:12px;">
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+          
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Your paper — where citation belongs</div>
+      <blockquote style="margin:0;padding:10px 12px;background:#fefce8;
+           border-left:3px solid #eab308;border-radius:0 6px 6px 0;
+           font-family:monospace;font-size:13px;color:#1e293b;
+           white-space:pre-wrap;">Most of the recent research works propose methods to improve the review generation capabilities of the LLMs. However, there&#x27;s no focus on the quality of critic and the questions in the review generated by the models trained using these techniques, hence rendering the review useless.</blockquote>
+        </div>
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+          
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Missing paper</div>
+      <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:4px;">
+        REMOR: Automated Peer Review Generation with LLM Reasoning and Multi-Objective Reinforcement Learning</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px;">
+        arXiv:2505.11718 · 5 citations</div>
+      <div style="font-size:13px;color:#334155;line-height:1.5;">
+        AI-based peer review systems tend to produce shallow and overpraising suggestions compared to human feedback. Here, we evaluate how well a reasoning LLM trained with multi-objective reinforcement learning (REMOR) can overcome these limitations. We start by designing a multi-aspect reward function that aligns with human evaluation of reviews. The aspects are related to the review itself (e.g., crit...</div>
+        </div>
+      </div>
+      <div style='background:#fffbeb;border:1px solid #fef08a;border-radius:6px;padding:10px 12px;font-size:13px;color:#713f12;font-style:italic;margin-bottom:10px;'>Given the cutoff of Nov 2025, several papers from 2025 should have been cited: TreeReview (2506.07642), ReviewRL (2508.10308), REMOR (2505.11718)... All of these are within the cutoff. The paper should have cited them but didn&#x27;t.</div>
+      
+    <div style="margin-top:14px;background:#f0f9ff;border:1px solid #bae6fd;
+         border-radius:6px;padding:12px 14px;">
+      <div style="font-size:11px;color:#0369a1;font-weight:600;
+           text-transform:uppercase;margin-bottom:8px;">How to respond</div>
+      <div style="font-size:13px;color:#0c4a6e;line-height:1.7;">
+        <strong>Option A — Cite &amp; compare:</strong>
+        Add a citation and brief comparison in your related work or experiments.<br>
+        <strong>Option B — Scope argument:</strong>
+        Explain why this paper is out of scope (different setting, later work, etc.).<br>
+        <strong>Option C — Acknowledge:</strong>
+        Add to limitations or future work section.
+      </div>
+    </div>
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Strengths
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>6 positives identified</span>
+</h2>
+  <div id="S1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S1]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">Focusing on question quality rather than full-review generation is a genuine gap in the peer-review automation literature.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Most of the recent research works propose methods to improve the review generation capabilities of the LLMs. However, there&#x27;s no focus on the quality of critic and the questions in the review generated by the models trained using these techniques, hence rendering the review useless.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is highlighting the paper&#x27;s focus on question quality as a novel contribution compared to existing review generation literature.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 198 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper addresses the problem of generating high-quality peer review questions. The authors: 1. Curated 15.5k questions from ICLR 2024 reviews... Clear problem framing - the focus on question quality rather than full review generation is well-motivated</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S2]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The observation that SFT captures reviewer style but not substantive critique (Section 4) is useful and consistent with concurrent findings (e.g., 2509.19326, &quot;Unveiling the Merits and Defects of LLMs in Automatic Review Generation&quot;).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">The fine-tuned model learned to mimic the phrasing and tone of reviewers but did not improve in producing meaningful questions: depth, reasoning, and grounding remained weak compared to Human-authored questions</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is praising the finding in Section 4 that SFT only captures stylistic elements rather than substantive reasoning.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 307 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">🔍 Found in literature search</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The finding that SFT captures style but not substance is useful... consistent with concurrent findings (e.g., 2509.19326, &quot;Unveiling the Merits and Defects of LLMs in Automatic Review Generation&quot;).</div>
+        </div>
+      
+        <div style="margin-top:10px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Supporting literature</div>
+          <ul style="margin:0;padding-left:18px;font-size:13px;color:#334155;"><li style="margin:2px 0;"><code style="font-size:12px;">[2509.19326]</code> Unveiling the Merits and Defects of LLMs in Automatic Review Generation for Scie</li></ul>
+        </div>
+    </div>
+  </div>
+  <div id="S3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S3]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">IntelliReward&#x27;s design — frozen autoregressive LLM with per-objective transformer heads trained in 30 minutes on a single L40S GPU (Section 5.2) — is practical and achieves 72% accuracy, substantially outperforming API-based LLM-as-judge baselines (Table 3).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We optimize with AdamW (learning rate $2 \times 10^{-5}$, batch size $8$, weight decay $0.01$) for $5$ epochs on a single NVIDIA L40S GPU. 
+End-to-end training completes within $30$ minutes.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is commenting on the efficiency and practicality of the IntelliReward training setup described in Section 5.2.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 409 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">IntelliReward: Frozen gpt-oss-20b backbone with trainable multi-head transformer heads... IntelliReward architecture is clever - frozen backbone + trainable heads is efficient and performs well... Table 3 (Reward Model): IntelliReward: Acc=72%</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S4]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The ablation study (Table 4) comparing MLP vs. transformer heads and pooling strategies is well-executed.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Ablation study comparing head architectures. \textbf{Base:} \twemoji{snowflake}\,= Frozen backbone, \twemoji{fire}\,= Trainable backbone. \textbf{Pool:} Pooling strategy ($k$=last $k$ tokens). \textbf{Scores:} Eff.=Effort, Evid.=Evidence, Grd.=Grounding.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is praising the ablation study in Table 2 (referred to as Table 4 in the review) which compares different head architectures and pooling strategies.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 463 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Architecture Ablation (Table 4): Best: Transformer head, trainable backbone, Pool50: Eff=71%, Evid=78%, Grd=70%, Mean=73%</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S5" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S5]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The FPB metric (Section 3.3) is a simple but insightful diagnostic for measuring surface-level engagement with papers.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We measure the fraction of words in the question that originate from the paper&#x27;s first page. This tests whether models rely disproportionately on introductory text when framing questions.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is praising the First Page Bias (FPB) metric introduced in Section 3.3 as a diagnostic tool.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 285 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The First Page Bias metric is a nice contribution for measuring surface-level generation... verified from paper lines 524-529: Human questions: FPB=28.21</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="S6" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#22c55e18;border-bottom:3px solid #22c55e;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#22c55e;font-size:13px;">[S6]</span>
+      <span style="font-weight:600;color:#22c55e;font-size:13px;">Strength</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #22c55e;padding-left:12px;">The multi-stage filtering process (Section 2, Appendix A.1) is described in detail with clear criteria, and the filtering prompts are provided in full.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #22c55e;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">After filtering, the final training dataset contained 15.5k questions drawn from 5,841 unique papers. The train dataset contains 13.2k questions and the test dataset contains 2.3k questions (see Appendix~\ref{sec:filtering_stages} for detailed filtering methodology</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is praising the detailed description of the data filtering process in Section 2 and the Appendix.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 234 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The multi-stage filtering process (Section 2, Appendix A.1) is described in detail with clear criteria, and the filtering prompts are provided in full.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Reviewer Questions
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>Answer these in your rebuttal</span>
+</h2>
+  <div id="Q1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q1]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">What is the inter-annotator agreement (Cohen&#x27;s \(\kappa\)) for the final binary annotations?</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">✓ Reviewer confirmed absent from paper</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">The paper reports Cohen&#x27;s κ scores but doesn&#x27;t give the actual numbers. The figure says &quot;confirming high agreement levels&quot; but without specific κ values, this is vague.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="Q2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q2]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">Why does IntelliAsk-32B score lower than Qwen3-32B on the Evidence dimension in the automatic evaluation (0.12 vs. 0.13)?</div>
+      
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">This means on Evidence, IntelliAsk-32B (0.12) is actually slightly worse than Qwen3-32B (0.13). So the improvement isn&#x27;t uniform across all dimensions.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="Q3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#3b82f618;border-bottom:3px solid #3b82f6;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#3b82f6;font-size:13px;">[Q3]</span>
+      <span style="font-weight:600;color:#3b82f6;font-size:13px;">Question</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #3b82f6;padding-left:12px;">How many distinct annotators were there for each phase? ... Are these the same four people for all annotation phases?</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #3b82f6;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">we conducted an experiment where four expert annotators evaluated the questions generated by 3 strong baseline LLMs.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is asking for clarification on the identity and consistency of the annotators mentioned throughout the paper.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 200 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Actually wait - they mention 4 expert annotators in the human evaluation for questions (line 493)... And in the preference study section (line 199): &quot;we conducted an experiment where four expert annotators evaluated the questions...&quot; Are these the same four people for all annotation phases?</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Suggestions for Improvement
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>5 actionable items</span>
+</h2>
+  <div id="SG1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG1]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#dc2626;color:white">CRITICAL</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Commission independent annotations. The most impactful revision would be to re-run the human evaluation with independent expert annotators (or at minimum, report separate author vs. non-author agreement).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Four expert annotators evaluated questions from multiple systems according to our three-dimensional rubric (Effort, Evidence, Grounding).</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting that the human evaluation (described here) should be done by independent annotators rather than authors.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 493 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Use external annotators (not the paper authors) for the human evaluation study</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG2]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Correct the claim that IntelliAsk has &quot;the lowest&quot; FPB (o3 is lower) in both occurrences. Add confidence intervals or significance tests for all comparisons (across runs and across annotators).</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Notably, IntelliAsk-32B achieves the lowest first page bias (21.37%), indicating that it draws from the full paper rather than relying primarily on the introduction.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting a correction to this specific claim about FPB and the addition of statistical tests.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 495 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Correct the claim that IntelliAsk has &quot;the lowest&quot; FPB (o3 is lower) in both occurrences.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG3" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG3]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Train both 7B and 32B models with the same RL algorithm (DAPO or GRPO) to enable clean scaling analysis, or explicitly ablate the algorithm choice at one model size.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">We train IntelliAsk-7B with DAPO\citep{dapo} and IntelliAsk-32B with GRPO.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting a more consistent training setup to allow for scaling analysis.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 483 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Use consistent RL algorithm across model sizes</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG4" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG4]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Analyze reward noise. Analyze how this noise level affects RL training dynamics, perhaps by comparing training with the full reward model vs. ground-truth labels on the test set.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">To reduce reliance on manual effort, we tested leading closed-source LLMs on the reward prediction task. However, they showed weak predictive accuracy (Table \ref{tab:extended_human_evaluation})</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting an analysis of how the noise in the reward model (IntelliReward) affects the RL training process.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 328 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Analyze how this noise level affects RL training dynamics, perhaps by comparing training with the full reward model vs. ground-truth labels on the test set.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="SG5" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#06b6d418;border-bottom:3px solid #06b6d4;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#06b6d4;font-size:13px;">[SG5]</span>
+      <span style="font-weight:600;color:#06b6d4;font-size:13px;">Suggestion</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">MINOR</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#ca8a04;color:white">Medium confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #06b6d4;padding-left:12px;">Decompose the cross-task gains. Run an ablation that evaluates the base model on external benchmarks before and after RL training to quantify how much of the gain comes from the base model vs. RL fine-tuning.</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #06b6d4;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Furthermore, IntelliAsk demonstrates strong cross-task generalization, on external benchmarks for reasoning and general writing.</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is suggesting a more detailed ablation of the cross-task gains mentioned in the contributions.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 215 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">💭 Based on reasoning only (no direct verification)</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Run an ablation that evaluates the base model on external benchmarks before and after RL training to quantify how much of the gain comes from the base model vs. RL fine-tuning.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Minor / Presentation Nits
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>Low priority — fix in camera-ready</span>
+</h2>
+  <div id="N1" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#ef444418;border-bottom:3px solid #ef4444;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#ef4444;font-size:13px;">[N1]</span>
+      <span style="font-weight:600;color:#ef4444;font-size:13px;">Nit</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#6b7280;color:white">NIT</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #ef4444;padding-left:12px;">there is an unfinished placeholder sentence in the introduction (line 196)</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #ef4444;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">[SCIDQA] [Describe other papers limitations, also about llms that are tuned to generate reviews, also write about the filtering steps in Openreviewer]</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is pointing out a placeholder/unfinished sentence in the introduction.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 196 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">Let me check line 196 - there&#x27;s a very incomplete sentence: &quot;[SCIDQA] [Describe other papers limitations...]&quot; - this is clearly an unfinished LaTeX comment/todo that was left in the paper.</div>
+        </div>
+      
+    </div>
+  </div>
+  <div id="N2" style="border:1px solid #e2e8f0;border-radius:8px;
+       margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <div style="background:#ef444418;border-bottom:3px solid #ef4444;
+         padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:#ef4444;font-size:13px;">[N2]</span>
+      <span style="font-weight:600;color:#ef4444;font-size:13px;">Nit</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#6b7280;color:white">NIT</span>
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#16a34a;color:white">High confidence</span>
+    </div>
+    <div style="padding:14px 16px;">
+      <div style="font-size:11px;color:#64748b;font-weight:600;
+           text-transform:uppercase;margin-bottom:6px;">Reviewer said</div>
+      <div style="font-size:14px;color:#1e293b;line-height:1.6;
+           border-left:3px solid #ef4444;padding-left:12px;">inconsistent citation formatting on line 198</div>
+      
+        <div style="margin-top:12px;background:#f8fafc;border-left:3px solid #ef4444;
+             padding:10px 14px;border-radius:0 6px 6px 0;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Paper passage this refers to</div>
+          <blockquote style="margin:0;font-family:monospace;font-size:13px;
+               color:#1e293b;white-space:pre-wrap;">Closer to our setting, \citet{opr}, fine-tunes LLaMA-8B on 79k reviews</blockquote>
+          <div style='margin-top:6px;font-size:12px;color:#475569;'>The reviewer is pointing out inconsistent citation formatting (extra comma) on line 198.</div>
+          <div style='margin-top:4px;font-size:11px;color:#94a3b8;'>≈ line 198 in source</div>
+        </div>
+      <div style="margin-top:8px;font-size:12px;color:#475569;">📖 Derived from reading paper section</div>
+      
+        <div style="margin-top:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;
+               text-transform:uppercase;margin-bottom:4px;">Reviewer's reasoning process</div>
+          <div style="background:#fefce8;border:1px solid #fef08a;border-radius:6px;
+               padding:10px 14px;font-size:13px;color:#713f12;font-style:italic;
+               white-space:pre-wrap;">line 198 mentions both &quot;citet{opr} &amp; \cite{autorev}&quot; - inconsistent citation formatting.</div>
+        </div>
+      
+    </div>
+  </div>
+<h2 style="font-size:18px;color:#1e293b;margin:28px 0 12px;padding-bottom:8px;
+     border-bottom:2px solid #e2e8f0;">Rebuttal Stubs
+  <span style='font-size:13px;font-weight:400;color:#64748b;margin-left:10px;'>Templates for major weaknesses</span>
+</h2><p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+  Fill in the blanks — these are starting points for your rebuttal response.</p>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W1] Self-annotation by paper authors is a critical methodological flaw....</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"></div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W2] Section 6.1 states: &quot;Notably, IntelliAsk-32B achieves the lowest first page bias (21.37%)&quot; (line 495). However, Table 1 ...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;Notably, IntelliAsk-32B achieves the lowest first page bias (21.37%), indicating...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W3] In the human evaluation, IntelliAsk-32B achieves 0.66/3.0. Since each dimension is binary (0 or 1), this means the avera...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;Among models, our IntelliAsk-32B achieves a score of 0.66/3.0, outperforming Gem...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W4] IntelliReward is used as the training reward signal for IntelliAsk *and* as the automatic evaluation metric (Section 6.2...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"></div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W5] In the automatic evaluation (Table 2), every SFT-only model essentially scores at floor: OpenReviewer-8B (0.10/3), DeepR...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"></div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [W6] Section 6.3 claims that &quot;learning to ask better questions transfers to better writing across diverse domains.&quot; However, ...</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"></div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-radius:6px;margin-bottom:12px;
+       padding:12px 14px;background:#f8fafc;">
+    <div style="font-weight:600;color:#1e293b;font-size:13px;margin-bottom:6px;">
+      [MG1] Add RL baselines. Compare against REMOR, ReviewRL, and TreeReview using IntelliReward as a unified evaluation metric....</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;"> (referring to: &quot;We also tested existing SFT-trained reviewer models (OpenReviewer, DeepReviewer,...&quot;)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;
+         background:#fff;border:1px solid #e2e8f0;border-radius:4px;padding:10px;">
+      <strong>If incorrect:</strong> [Your counter-evidence here]<br>
+      <strong>If partially correct:</strong> [Acknowledge + clarification/fix]<br>
+      <strong>If valid:</strong> [Planned experiment / revision commitment]
+    </div>
+  </div></div>
+<div style="background:#f1f5f9;border-top:1px solid #e2e8f0;padding:20px 40px;
+     font-size:12px;color:#94a3b8;text-align:center;">
+  Generated by ReviewGenie Annotation Pipeline
+</div>
+</body></html>
