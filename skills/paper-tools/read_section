@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+r"""Read a named section from /app/latex/template.tex.
+
+Works on both LaTeX source (\section{...}) and OCR/pandoc Markdown (## Header).
+
+Usage:
+    read_section "Introduction"
+    read_section "Related Work"
+    read_section "Experiments" --subsections       # include all subsections
+    read_section --list                            # list all section headings
+"""
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+PAPER = Path("/app/latex/template.tex")
+
+
+def _is_markdown(text: str) -> bool:
+    return bool(re.search(r"^#{1,3} ", text, re.MULTILINE))
+
+
+def _extract_sections_latex(text: str) -> list[tuple[str, int, int, str]]:
+    """Return list of (normalized_title, start_line, end_line, level) for LaTeX."""
+    pat = re.compile(
+        r"^\\(section|subsection|subsubsection)\*?\{([^}]+)\}",
+        re.MULTILINE,
+    )
+    lines = text.splitlines()
+    line_offsets = []
+    pos = 0
+    for line in lines:
+        line_offsets.append(pos)
+        pos += len(line) + 1
+
+    hits = []
+    for m in pat.finditer(text):
+        lvl_map = {"section": 1, "subsection": 2, "subsubsection": 3}
+        lvl = lvl_map[m.group(1)]
+        title = m.group(2).strip()
+        # find which line this match is on
+        char_pos = m.start()
+        lineno = next(
+            (i for i, o in reversed(list(enumerate(line_offsets))) if o <= char_pos),
+            0,
+        )
+        hits.append((title, lineno, lvl))
+
+    sections = []
+    for i, (title, start, lvl) in enumerate(hits):
+        end = hits[i + 1][1] - 1 if i + 1 < len(hits) else len(lines) - 1
+        sections.append((title, start, end, str(lvl)))
+    return sections
+
+
+def _extract_sections_md(text: str) -> list[tuple[str, int, int, str]]:
+    """Return list of (normalized_title, start_line, end_line, level) for Markdown."""
+    pat = re.compile(r"^(#{1,4})\s+(.+)$", re.MULTILINE)
+    lines = text.splitlines()
+    hits = []
+    for i, line in enumerate(lines):
+        m = pat.match(line)
+        if m:
+            hits.append((m.group(2).strip(), i, len(m.group(1))))
+
+    sections = []
+    for i, (title, start, lvl) in enumerate(hits):
+        end = hits[i + 1][1] - 1 if i + 1 < len(hits) else len(lines) - 1
+        sections.append((title, start, end, str(lvl)))
+    return sections
+
+
+def _find_section(sections, query: str, include_subsections: bool):
+    q = query.lower()
+    # Exact match first, then prefix, then substring
+    for strategy in ("exact", "prefix", "substring"):
+        for title, start, end, lvl in sections:
+            t = title.lower()
+            if strategy == "exact" and t == q:
+                match_lvl = lvl
+                break
+            if strategy == "prefix" and t.startswith(q):
+                match_lvl = lvl
+                break
+            if strategy == "substring" and q in t:
+                match_lvl = lvl
+                break
+        else:
+            continue
+        break
+    else:
+        return None, None, None
+
+    # Expand end to include subsections if requested
+    if include_subsections:
+        # extend until we hit another section of same or higher level
+        new_end = end
+        for title2, start2, end2, lvl2 in sections:
+            if start2 > start and int(lvl2) <= int(match_lvl):
+                break
+            if start2 > end:
+                new_end = end2
+        return start, new_end, title
+    return start, end, title
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Read a named section from the paper under review."
+    )
+    parser.add_argument("section", nargs="?", default=None,
+                        help="Section name to read (case-insensitive substring match)")
+    parser.add_argument("--subsections", action="store_true",
+                        help="Include all subsections under the matched section")
+    parser.add_argument("--list", action="store_true",
+                        help="List all section headings with line numbers")
+    args = parser.parse_args()
+
+    if not PAPER.is_file():
+        print(f"error: {PAPER} not found", file=sys.stderr)
+        sys.exit(2)
+
+    text = PAPER.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+    is_md = _is_markdown(text)
+
+    sections = _extract_sections_md(text) if is_md else _extract_sections_latex(text)
+
+    if args.list or args.section is None:
+        print(f"Sections in {PAPER.name} ({len(sections)} found):\n")
+        for title, start, end, lvl in sections:
+            indent = "  " * (int(lvl) - 1)
+            print(f"  line {start+1:4d}  {indent}{title}")
+        return
+
+    start, end, matched = _find_section(sections, args.section, args.subsections)
+    if start is None:
+        available = [t for t, _, _, _ in sections]
+        print(
+            f"error: section {args.section!r} not found.\n"
+            f"Available sections: {available}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    print(f"=== {matched} (lines {start+1}–{end+1}) ===\n")
+    print("\n".join(lines[start : end + 1]))
+
+
+if __name__ == "__main__":
+    main()

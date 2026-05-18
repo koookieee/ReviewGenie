@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""Extract a table from /app/latex/template.tex by number or caption keyword.
+
+Works on both LaTeX (tabular/table environments) and Markdown (pipe tables).
+
+Usage:
+    read_table 1                    # Table 1
+    read_table 2                    # Table 2
+    read_table "accuracy"           # first table whose caption contains "accuracy"
+    read_table --list               # list all tables with captions
+"""
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+PAPER = Path("/app/latex/template.tex")
+
+
+def _is_markdown(text: str) -> bool:
+    return bool(re.search(r"^#{1,3} ", text, re.MULTILINE))
+
+
+# ---------------------------------------------------------------------------
+# LaTeX table extraction
+# ---------------------------------------------------------------------------
+
+def _extract_latex_tables(text: str) -> list[dict]:
+    """Return list of {index, caption, body, start_line, end_line}."""
+    lines = text.splitlines()
+
+    # Find all \begin{table} ... \end{table} blocks (possibly nested)
+    env_re = re.compile(r"\\begin\{table\*?\}", re.IGNORECASE)
+    end_re = re.compile(r"\\end\{table\*?\}", re.IGNORECASE)
+    cap_re = re.compile(r"\\caption\{((?:[^{}]|\{[^{}]*\})*)\}", re.IGNORECASE)
+
+    tables = []
+    i = 0
+    depth = 0
+    start = None
+    idx = 1
+    for lineno, line in enumerate(lines):
+        if env_re.search(line):
+            if depth == 0:
+                start = lineno
+            depth += 1
+        if end_re.search(line):
+            depth = max(0, depth - 1)
+            if depth == 0 and start is not None:
+                block = "\n".join(lines[start : lineno + 1])
+                cap_m = cap_re.search(block)
+                caption = cap_m.group(1).strip() if cap_m else ""
+                # strip LaTeX commands from caption for readability
+                caption = re.sub(r"\\[a-zA-Z]+\{([^}]*)\}", r"\1", caption)
+                caption = re.sub(r"\\[a-zA-Z]+", "", caption).strip()
+                tables.append({
+                    "index": idx,
+                    "caption": caption,
+                    "body": block,
+                    "start_line": start + 1,
+                    "end_line": lineno + 1,
+                })
+                idx += 1
+                start = None
+    return tables
+
+
+# ---------------------------------------------------------------------------
+# Markdown table extraction
+# ---------------------------------------------------------------------------
+
+def _extract_md_tables(text: str) -> list[dict]:
+    """Extract pipe-delimited Markdown tables with preceding caption lines."""
+    lines = text.splitlines()
+    tables = []
+    idx = 1
+    i = 0
+    while i < len(lines):
+        # Markdown table row starts with |
+        if re.match(r"^\s*\|", lines[i]):
+            start = i
+            # look for caption on the line immediately before (Table X: ...)
+            caption = ""
+            if i > 0:
+                prev = lines[i - 1].strip()
+                m = re.search(r"(?:Table\s+\d+[:.]\s*)?(.+)", prev, re.IGNORECASE)
+                if m and not prev.startswith("|"):
+                    caption = prev
+            # collect all contiguous table rows
+            end = i
+            while end < len(lines) and re.match(r"^\s*\|", lines[end]):
+                end += 1
+            body = "\n".join(lines[start:end])
+            tables.append({
+                "index": idx,
+                "caption": caption,
+                "body": body,
+                "start_line": start + 1,
+                "end_line": end,
+            })
+            idx += 1
+            i = end
+        else:
+            i += 1
+    return tables
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extract a table from the paper under review."
+    )
+    parser.add_argument("target", nargs="?", default=None,
+                        help="Table number (1, 2, …) or caption keyword")
+    parser.add_argument("--list", action="store_true",
+                        help="List all tables with captions and line numbers")
+    args = parser.parse_args()
+
+    if not PAPER.is_file():
+        print(f"error: {PAPER} not found", file=sys.stderr)
+        sys.exit(2)
+
+    text = PAPER.read_text(encoding="utf-8", errors="replace")
+    is_md = _is_markdown(text)
+    tables = _extract_md_tables(text) if is_md else _extract_latex_tables(text)
+
+    if args.list or args.target is None:
+        if not tables:
+            print("No tables found in paper.")
+            return
+        print(f"Tables in paper ({len(tables)} found):\n")
+        for t in tables:
+            cap = t["caption"] or "(no caption)"
+            print(f"  Table {t['index']}  (lines {t['start_line']}–{t['end_line']})  {cap[:80]}")
+        return
+
+    # Resolve by number or keyword
+    target = args.target.strip()
+    match = None
+    if target.isdigit():
+        n = int(target)
+        for t in tables:
+            if t["index"] == n:
+                match = t
+                break
+    else:
+        q = target.lower()
+        for t in tables:
+            if q in t["caption"].lower() or q in t["body"].lower():
+                match = t
+                break
+
+    if match is None:
+        print(
+            f"error: table {target!r} not found.\n"
+            f"Run `read_table --list` to see available tables.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    cap = match["caption"] or "(no caption)"
+    print(f"=== Table {match['index']} (lines {match['start_line']}–{match['end_line']}) ===")
+    print(f"Caption: {cap}\n")
+    print(match["body"])
+
+
+if __name__ == "__main__":
+    main()

@@ -198,14 +198,17 @@ class PassAtKTrial(Trial):
 
         logger.info(f"Uploaded task content from {task_dir} to {workdir}")
 
-        # Upload instruction template
-        instruction_template = PROJECT_DIR / "prompts" / "paper_reviewer_instruction_template.md"
+        # Upload instruction template — autonomous only
+        instruction_template = PROJECT_DIR / "prompts" / "paper_reviewer_instruction_template_autonomous.md"
         if instruction_template.is_file():
             target = f"/{workdir.strip('/')}/instruction.md"
             try:
                 await self._environment.upload_file(instruction_template, target)
+                logger.info(f"Using instruction template: {instruction_template.name}")
             except Exception as e:
                 logger.warning(f"Failed to upload instruction template: {e}")
+        else:
+            logger.error(f"Autonomous instruction template not found at {instruction_template}")
 
         # Upload search skill to all likely locations for the claude-code agent
         skill_file = PROJECT_DIR / "skills" / "search-papers" / "SKILL.md"
@@ -222,6 +225,21 @@ class PassAtKTrial(Trial):
                 except Exception:
                     pass
 
+        # Upload paper-tools skill to all likely locations
+        paper_tools_skill = PROJECT_DIR / "skills" / "paper-tools" / "SKILL.md"
+        if paper_tools_skill.is_file():
+            for skill_target in [
+                "/root/.claude/skills/paper-tools/SKILL.md",
+                "/home/user/.claude/skills/paper-tools/SKILL.md",
+                f"/{workdir.strip('/')}/.claude/skills/paper-tools/SKILL.md",
+                "/logs/agent/sessions/skills/paper-tools/SKILL.md",
+            ]:
+                try:
+                    await self._environment.upload_file(paper_tools_skill, skill_target)
+                    logger.info(f"Uploaded paper-tools skill to {skill_target}")
+                except Exception:
+                    pass
+
         # Upload the `search` CLI wrapper to /app/search and make it executable.
         # The skill instructs the agent to ONLY use this wrapper (never curl).
         search_cli = PROJECT_DIR / "skills" / "search-papers" / "search"
@@ -229,7 +247,6 @@ class PassAtKTrial(Trial):
             cli_target = f"/{workdir.strip('/')}/search"
             try:
                 await self._environment.upload_file(search_cli, cli_target)
-                # Make executable inside the sandbox
                 try:
                     await self._environment.exec(f"chmod +x {cli_target}")
                 except Exception:
@@ -237,6 +254,22 @@ class PassAtKTrial(Trial):
                 logger.info(f"Uploaded search CLI to {cli_target}")
             except Exception as e:
                 logger.warning(f"Failed to upload search CLI: {e}")
+
+        # Upload paper-tools CLIs: read_section, read_table, read_figure
+        paper_tools_dir = PROJECT_DIR / "skills" / "paper-tools"
+        for tool_name in ("read_section", "read_table", "read_figure"):
+            tool_file = paper_tools_dir / tool_name
+            if tool_file.is_file():
+                cli_target = f"/{workdir.strip('/')}/{tool_name}"
+                try:
+                    await self._environment.upload_file(tool_file, cli_target)
+                    try:
+                        await self._environment.exec(f"chmod +x {cli_target}")
+                    except Exception:
+                        pass
+                    logger.info(f"Uploaded {tool_name} to {cli_target}")
+                except Exception as e:
+                    logger.warning(f"Failed to upload {tool_name}: {e}")
 
         # Write paper-cutoff month so the search CLI auto-applies a temporal
         # filter even if the agent forgets `--before`. Cutoff = submission
@@ -542,8 +575,8 @@ async def run_single_attempt(
     trial_name = f"{model_slug}-pass-at-k-{paper_id}-attempt{attempt_idx}-{int(time.time())}"
     logger.info(f"Starting {paper_id} attempt {attempt_idx}")
 
-    # Copy instruction template
-    instruction_template = PROJECT_DIR / "prompts" / "paper_reviewer_instruction_template.md"
+    # Copy instruction template — autonomous only
+    instruction_template = PROJECT_DIR / "prompts" / "paper_reviewer_instruction_template_autonomous.md"
     if instruction_template.is_file():
         shutil.copy2(instruction_template, task_dir / "instruction.md")
 
