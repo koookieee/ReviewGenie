@@ -6,16 +6,16 @@ Complete record of issues encountered, fixes applied, and how to run the pass@K 
 
 ## Overview
 
-The goal is to run a pass@K evaluation: for each of 100 arXiv papers with human reviews, run K=4 independent paper review attempts using **Kimi K2.5** (via Fireworks), score each with a **Gemini LLM judge**, and compute pass@K statistics.
+The goal is to run a pass@K evaluation: for each of 100 arXiv papers with human reviews, run K=4 independent paper review attempts using **DeepSeek-v4-pro** (via DeepSeek Anthropic-compatible API), score each with a **Gemini LLM judge**, and compute pass@K statistics.
 
 **Stack:**
 - **Harbor** — trial execution framework
-- **E2B** — cloud sandboxes where Claude Code + Kimi K2.5 runs
-- **stream_proxy.py** — translates Anthropic API calls from Claude Code → Fireworks (Kimi K2.5)
+- **E2B** — cloud sandboxes where Claude Code + DeepSeek-v4-pro runs
+- **DeepSeek API** — `https://api.deepseek.com/anthropic` (Anthropic-compatible endpoint, no proxy needed)
 - **Gemini 3.1 Pro** — LLM judge that scores each review
 - **Paper Search API** — 928K arXiv paper search running on the machine (port 8081)
 
-**Machine:** vast.ai instance at ssh -p 47139 root@171.226.36.255 -L 8080:localhost:8080
+**Machine:** vast.ai instance at ssh -p 54871 root@171.226.34.64 -L 8080:localhost:8080
 
 ---
 

@@ -175,8 +175,8 @@ class PassAtKTrial(Trial):
                         md_content = _pre_text
                         logger.info(f"Using pre-converted Markdown: {len(md_content):,} chars")
                     else:
-                        md_content = _latex_to_markdown(tex_file)
-                        logger.info(f"Converted LaTeX→Markdown: {len(md_content):,} chars")
+                        md_content = tex_file.read_text(errors="replace")
+                        logger.info(f"Using raw LaTeX source: {len(md_content):,} chars")
                 except Exception as e:
                     logger.warning(f"Failed to convert/upload latex: {e}")
 
@@ -338,13 +338,9 @@ def _load_task_metadata(task_dir: Path) -> dict:
         tex_file = _find_latex_entry(latex_dir) if latex_dir.is_dir() else preconverted
         if tex_file.is_file():
             try:
-                paper_body = _latex_to_markdown(tex_file)
-            except Exception as e:
-                logger.warning(f"Could not load paper body for judge: {e}")
-                try:
-                    paper_body = tex_file.read_text(errors="replace")
-                except Exception:
-                    pass
+                paper_body = tex_file.read_text(errors="replace")
+            except Exception:
+                pass
     metadata["paper_body"] = paper_body
 
     if not metadata["title"]:
@@ -519,6 +515,7 @@ async def run_single_attempt(
     paper_id: str,
     attempt_idx: int,
     markdown_dir: Path | None = None,
+    skip_judge: bool = False,
 ) -> dict:
     """Run one review attempt for a paper."""
     result_dir = results_dir / paper_id / f"attempt_{attempt_idx}"
@@ -597,13 +594,19 @@ async def run_single_attempt(
 
     # Score
     scores = {}
-    if trajectory_path and trajectory_path.exists():
+    if not skip_judge and trajectory_path and trajectory_path.exists():
+        md_path = None
+        if markdown_dir is not None:
+            md = markdown_dir / f"{paper_id}.md"
+            if md.is_file():
+                md_path = md
         scores = await score_review(
             trajectory_path=trajectory_path,
             task_dir=task_dir,
             judge_api_key=judge_api_key,
             judge_model=judge_model,
             judge_base_url=judge_base_url,
+            markdown_path=md_path,
         )
 
     exception_type = None
@@ -655,6 +658,7 @@ async def run_pass_at_k(
     task_filter: list[str] | None = None,
     max_tasks: int | None = None,
     markdown_dir: Path | None = None,
+    skip_judge: bool = False,
 ):
     """Run K attempts for each paper and save all results."""
     # Discover tasks
@@ -667,17 +671,18 @@ async def run_pass_at_k(
         task_dirs = [d for d in task_dirs if d.name in task_filter]
 
     # Require ≥2 human reviews per paper — single-reviewer ground truth is too noisy
-    # for the overlap/calibration criteria to be meaningful.
-    before = len(task_dirs)
-    task_dirs = [
-        d for d in task_dirs
-        if len(json.loads((d / "task_metadata.json").read_text()).get("human_reviews", []))
-        >= 2
-        if (d / "task_metadata.json").is_file()
-    ]
-    skipped = before - len(task_dirs)
-    if skipped:
-        logger.info(f"Skipped {skipped} papers with <2 human reviews")
+    # for the overlap/calibration criteria to be meaningful. Skip when judging is disabled.
+    if not skip_judge:
+        before = len(task_dirs)
+        task_dirs = [
+            d for d in task_dirs
+            if len(json.loads((d / "task_metadata.json").read_text()).get("human_reviews", []))
+            >= 2
+            if (d / "task_metadata.json").is_file()
+        ]
+        skipped = before - len(task_dirs)
+        if skipped:
+            logger.info(f"Skipped {skipped} papers with <2 human reviews")
 
     if max_tasks:
         task_dirs = task_dirs[:max_tasks]
@@ -703,6 +708,7 @@ async def run_pass_at_k(
                 paper_id=task_dir.name,
                 attempt_idx=attempt_idx,
                 markdown_dir=markdown_dir,
+                skip_judge=skip_judge,
             )
 
     # Create all tasks: K attempts per paper
@@ -800,6 +806,8 @@ def main():
     parser.add_argument("--markdown-dir", type=str, default=None,
                         help="Directory of OCR markdown files (<paper_id>.md). "
                              "Preferred over task-dir latex when present.")
+    parser.add_argument("--skip-judge", action="store_true",
+                        help="Run agent only, skip judging/scoring.")
     args = parser.parse_args()
 
     # Load .env
@@ -814,7 +822,8 @@ def main():
     assert os.environ.get("E2B_API_KEY"), "E2B_API_KEY must be set"
 
     judge_api_key = os.environ.get("GEMINI_API_KEY", "")
-    assert judge_api_key, "GEMINI_API_KEY must be set for judge"
+    if not args.skip_judge:
+        assert judge_api_key, "GEMINI_API_KEY must be set for judge"
 
     search_api_url = os.environ.get("SEARCH_PUBLIC_URL", "http://216.166.148.134:28597")
     judge_model = os.environ.get("JUDGE_MODEL", "gemini-3.1-pro-preview")
@@ -842,6 +851,7 @@ def main():
             task_filter=args.tasks,
             max_tasks=args.max_tasks,
             markdown_dir=Path(args.markdown_dir) if args.markdown_dir else None,
+            skip_judge=args.skip_judge,
         )
     )
 
