@@ -68,6 +68,10 @@ Based on your literature search:
 3. Are the limitations honestly discussed?
 4. Does the abstract accurately reflect the paper's actual contributions?
 
+### Phase 7: Constructive Suggestions
+
+For each major weakness, propose a concrete, actionable improvement the authors could make in a revision cycle. Tie each suggestion to a specific weakness from your review. Prefer specific baselines, ablations, or framing tweaks over vague advice or large scale experiments which are not possible to run in considerable amount of time.
+
 ## Output Format
 
 After completing your review, output your review as **plain markdown**. Your final message must be ONLY the review — no preamble, no "Here is my review:", just the review itself. Use this structure:
@@ -80,6 +84,8 @@ After completing your review, output your review as **plain markdown**. Your fin
 ### Strengths
 
 ### Weaknesses
+
+### Suggestions for Improvement
 
 ### Questions
 
@@ -100,6 +106,68 @@ After completing your review, output your review as **plain markdown**. Your fin
 - **Soundness** (1-4): 1=poor, 2=fair, 3=good, 4=excellent
 - **Overall** (1-10): 1=strong reject, 4=reject, 5=borderline, 6=weak accept, 8=accept, 10=strong accept
 - **Confidence** (1-5): 1=low confidence, 3=moderate, 5=very confident
+
+## Critical Verification Rules — read before writing ANY claim
+
+**Every factual claim you make MUST be verified by re-reading the exact passage in `/app/latex/template.tex`. Never write from memory. Never quantify an impression. Never guess a count. Before committing any claim to your review, re-read the relevant section of the paper to confirm the numbers, names, and comparisons are exactly correct.**
+
+### THE CARDINAL RULE: Enumerate, Don't Count
+
+**Aggregate claims that count "how many" are the #1 source of fabrication.** You form an impression ("method X seems better"), and your brain invents a number ("wins on 5 of 6"). This is FABRICATION.
+
+**ANY claim of the form "X out of Y metrics/benchmarks/datasets" MUST be preceded by reading the full table/section and explicitly enumerating EVERY item with its values.** Like this:
+- Item 1: [value A] vs [value B] → [winner]
+- Item 2: [value A] vs [value B] → [winner]
+- ...all items listed...
+- Therefore: [winner] on [COUNT] of [TOTAL]
+
+If you cannot enumerate every item, you CANNOT make the aggregate claim. Instead, make a specific claim about specific items: "Method A outperforms on [specific metric 1] and [specific metric 2], while Method B performs better on the remaining metrics."
+
+### FORBIDDEN PHRASES (unless backed by explicit item-by-item enumeration in the review)
+
+The following are RED FLAGS that signal you are quantifying an impression without evidence:
+- "X out of Y metrics/benchmarks/datasets"
+- "on N of M tasks"
+- "outperforms on all but one"
+- "across the board"
+- "consistently worse/better on every metric"
+- "in the majority of cases"
+- "in most experiments"
+
+When you catch yourself writing any of these, STOP. Go back and re-read the full table or section in the paper. Enumerate every item. Only then write the claim — with the enumeration visible in the review.
+
+### Numerical claims
+
+- When you state a number, re-read the exact table cell or paragraph it came from. Do not transcribe from memory.
+- When you quote a range, re-read EVERY cell in the relevant table row/column. A single outlier outside the range makes the claim false.
+- When you compare two methods numerically, re-read both numbers from the paper and confirm the comparison direction. Lower is not always better — confirm which way the metric runs.
+
+### Comparative claims
+
+- Before writing "X outperforms Y" or "X is worse than Y", re-read the relevant results section and confirm the comparison direction from the paper itself.
+- Before writing "the paper does not compare to X" or "the paper lacks Y baseline", re-read the experimental setup and results sections. The authors may discuss it in a section you skimmed.
+- Before claiming "the paper didn't cite X", re-read the references and related work sections. Only after confirming the citation is genuinely absent may you claim so.
+
+### Framing claims
+
+- Before characterizing how the paper frames something ("the authors dismiss X", "the paper claims Y as the main contribution"), re-read the relevant passage to confirm.
+- Do not infer framing from search results or abstracts — verify against the actual text of the paper.
+
+### Mandatory Self-Audit (perform BEFORE submitting your review)
+
+Before submitting, do an explicit self-audit pass:
+
+1. **Audit every numerical claim**: Scan your review line by line. For every number, percentage, or count you wrote, re-read the exact passage in `/app/latex/template.tex` that contains that number. If the paper does not contain that number, DELETE the claim.
+
+2. **Audit every comparative claim**: For every "X beats Y" or "X is worse than Y" statement, re-read the relevant results section and confirm the comparison direction from the paper's own tables and text.
+
+3. **Audit every aggregate claim**: For every "X out of Y" or "N of M" claim, verify you have explicitly enumerated all items with their values. If you have not, either add the enumeration or delete the aggregate claim.
+
+4. **Audit table-derived claims**: For any claim derived from a table, re-read the FULL table — every row, every column. Do not rely on partial or fragmented views. Read the complete table. Confirm your claim against every cell before keeping it.
+
+5. **Check for impression-driven language**: Search your review for the forbidden phrases listed above. For each one found, verify it is backed by explicit enumeration from the paper. Delete any that are not.
+
+If you find ANY claim during this audit that you cannot verify by re-reading the paper, DELETE IT. An incomplete review is better than a fabricated one.
 
 ## Important Rules
 
