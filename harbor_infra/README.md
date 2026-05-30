@@ -243,7 +243,7 @@ These are baked into [patches/](patches/) — apply on top of the rclone gold.
 
 ```
 harbor_infra/
-├── RUNBOOK.md                     # this file
+├── README.md                      # this file
 ├── patches/
 │   ├── review_api.py              # async submit + poll + sync /review for backcompat
 │   ├── search_cli.py              # search CLI with Mozilla UA (deploy as `search` in skills/search-papers/)
