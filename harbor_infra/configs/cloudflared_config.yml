@@ -1,0 +1,13 @@
+tunnel: search_api
+credentials-file: /root/.cloudflared/2fb6b456-efcf-4b6e-ba12-3ef906391319.json
+
+ingress:
+  - hostname: search-api.eigenlabs.online
+    service: http://localhost:8081
+  - hostname: review-api.eigenlabs.online
+    service: http://localhost:8082
+  - hostname: search_api.eigenlabs.online
+    service: http://localhost:8081
+  - hostname: review_api.eigenlabs.online
+    service: http://localhost:8082
+  - service: http_status:404

@@ -1,0 +1,519 @@
+#!/bin/bash
+# Run an AI Scientist experiment in Harbor
+#
+# Usage: ./run.sh <ideas/idea_*.json> [OPTIONS]
+#
+# Examples:
+#   ./run.sh ideas/idea_tabulartransformer.json                              # Local Docker, CPU
+#   ./run.sh ideas/idea_tabulartransformer.json --gpus 1                     # Local Docker, GPU
+#   ./run.sh ideas/idea_tabulartransformer.json --model anthropic/claude-sonnet-4-5-20250929
+#   ./run.sh ideas/idea_tabulartransformer.json --env modal --gpus 1         # Modal cloud, GPU
+#   ./run.sh ideas/idea_tabulartransformer.json --resume-from jobs/tabulartransformer__2026-02-22__12-00-00/
+#   ./run.sh ideas/idea_videoqa_with_tool.json --agent gemini-cli            # Gemini CLI agent
+
+set -euo pipefail
+
+IDEA_JSON=""
+MODEL=""           # empty = auto-select based on agent type
+TIMEOUT="14400"
+RESUME_FROM=""
+RESUME_BRANCH=""   # auto-detected from job dir, or set via gitlab_setup.py
+GITLAB_RESUME_BRANCH=""
+ENV_TYPE=""        # empty = docker (default)
+GPUS="0"
+MODAL_SECRET="harbor-env"
+USE_UPSTREAM_AGENT="0"
+ARTIFACT_SYNC_INTERVAL="180"
+AGENT_TYPE="claude-code"
+PATCHED_AGENT_IMPORT_PATH=""  # set after arg parsing based on AGENT_TYPE
+FEEDBACK=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --model)
+            MODEL="$2"
+            shift 2
+            ;;
+        --timeout)
+            TIMEOUT="$2"
+            shift 2
+            ;;
+        --resume-from)
+            RESUME_FROM="$2"
+            shift 2
+            ;;
+        --env)
+            ENV_TYPE="$2"
+            shift 2
+            ;;
+        --gpus)
+            GPUS="$2"
+            shift 2
+            ;;
+        --modal-secret)
+            MODAL_SECRET="$2"
+            shift 2
+            ;;
+        --use-upstream-agent)
+            USE_UPSTREAM_AGENT="1"
+            shift
+            ;;
+        --artifact-sync-interval)
+            ARTIFACT_SYNC_INTERVAL="$2"
+            shift 2
+            ;;
+        --agent)
+            AGENT_TYPE="$2"
+            shift 2
+            ;;
+        --feedback)
+            FEEDBACK="$2"
+            shift 2
+            ;;
+        --feedback-file)
+            if [[ ! -f "$2" ]]; then
+                echo "Error: feedback file '$2' not found" >&2
+                exit 1
+            fi
+            FEEDBACK="$(cat "$2")"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: ./run.sh <idea.json> [OPTIONS]"
+            echo ""
+            echo "Arguments:"
+            echo "  idea.json                  Path to research idea JSON file"
+            echo ""
+            echo "Options:"
+            echo "  --agent TYPE               Agent: claude-code (default), gemini-cli, or codex"
+            echo "  --model MODEL              LLM model (auto-selected per agent if omitted)"
+            echo "  --timeout SECS             Agent timeout in seconds (default: 7200)"
+            echo "  --resume-from JOB_PATH     Resume from a previous run's artifacts"
+            echo "  --env ENV                  Environment: docker (default) or modal"
+            echo "  --gpus N                   Number of GPUs (default: 0, works with local Docker and Modal)"
+            echo "  --modal-secret NAME        Modal secret name (default: harbor-env)"
+            echo "  --use-upstream-agent       Use Harbor's built-in agent (no artifact sync)"
+            echo "  --artifact-sync-interval S Artifact sync interval in seconds (default: 180)"
+            echo "  --feedback TEXT            Feedback/notes to include in the instruction"
+            echo "  --feedback-file FILE      Read feedback from a file (avoids shell quoting issues)"
+            exit 0
+            ;;
+        *)
+            if [[ -z "$IDEA_JSON" ]]; then
+                IDEA_JSON="$1"
+            else
+                echo "Error: unexpected argument '$1'" >&2
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "$IDEA_JSON" ]]; then
+    echo "Error: idea.json path required" >&2
+    echo "Usage: ./run.sh <idea.json> [OPTIONS]" >&2
+    exit 1
+fi
+
+if [[ ! -f "$IDEA_JSON" ]]; then
+    echo "Error: $IDEA_JSON not found" >&2
+    exit 1
+fi
+
+# --- Extract idea name for job naming ---
+# Strip path and extension: idea_tabulartransformer.json -> tabulartransformer
+IDEA_BASENAME="$(basename "$IDEA_JSON" .json)"
+IDEA_NAME="${IDEA_BASENAME#idea_}"       # remove "idea_" prefix if present
+IDEA_NAME="${IDEA_NAME#idea}"            # remove "idea" prefix if present (no underscore)
+IDEA_NAME="${IDEA_NAME:-unknown}"        # fallback
+
+# --- Resolve agent type defaults ---
+case "$AGENT_TYPE" in
+    claude-code)
+        [[ -z "$MODEL" ]] && MODEL="anthropic/claude-opus-4-6"
+        PATCHED_AGENT_IMPORT_PATH="local_harbor_agents.patched_claude_code:PatchedClaudeCode"
+        UPSTREAM_AGENT_FLAG="claude-code"
+        ;;
+    gemini-cli)
+        [[ -z "$MODEL" ]] && MODEL="google/gemini-3.1-pro-preview"
+        PATCHED_AGENT_IMPORT_PATH="local_harbor_agents.patched_gemini_cli:PatchedGeminiCli"
+        UPSTREAM_AGENT_FLAG="gemini-cli"
+        ;;
+    codex)
+        [[ -z "$MODEL" ]] && MODEL="openai/gpt-5.4"
+        PATCHED_AGENT_IMPORT_PATH="local_harbor_agents.patched_codex:PatchedCodex"
+        UPSTREAM_AGENT_FLAG="codex"
+        ;;
+    *)
+        echo "Error: unknown agent type '$AGENT_TYPE' (use claude-code, gemini-cli, or codex)" >&2
+        exit 1
+        ;;
+esac
+
+# Validate and setup local GPU support
+if [[ "$GPUS" != "0" && "$ENV_TYPE" != "modal" ]]; then
+    # Check if nvidia runtime is available for local Docker
+    if ! docker info 2>/dev/null | grep -q "nvidia"; then
+        echo "Error: --gpus requires NVIDIA Container Toolkit (nvidia-docker)" >&2
+        echo "Install: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html" >&2
+        exit 1
+    fi
+    # Patch Harbor for local GPU support (idempotent)
+    python3 -c "from local_harbor_agents import ensure_gpu_support; ensure_gpu_support(quiet=True)" 2>/dev/null || \
+        PYTHONPATH="$SCRIPT_DIR" python3 -c "from local_harbor_agents import ensure_gpu_support; ensure_gpu_support(quiet=True)"
+fi
+
+if ! [[ "$ARTIFACT_SYNC_INTERVAL" =~ ^[0-9]+$ ]] || [[ "$ARTIFACT_SYNC_INTERVAL" -lt 30 ]]; then
+    echo "Error: --artifact-sync-interval must be an integer >= 30" >&2
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# --- Load .env into the current shell so harbor/agent can read them (optional) ---
+for env_file in "$SCRIPT_DIR/.env" "$SCRIPT_DIR/../.env"; do
+    if [[ -f "$env_file" ]]; then
+        # Only source if file has valid bash syntax (VAR=value, no spaces around =)
+        if bash -n "$env_file" 2>/dev/null; then
+            echo "Loading env from $env_file"
+            set -a
+            source "$env_file"
+            set +a
+            break
+        fi
+    fi
+done
+
+# Persistent data directory (datasets, models, etc.) — mounted into container at /data
+# Must come AFTER .env sourcing so DATA_DIR from .env takes priority
+DATA_DIR="${DATA_DIR:-$SCRIPT_DIR/data}"
+export DATA_DIR
+mkdir -p "$DATA_DIR"
+
+# Create per-job temp copy of harbor-task so concurrent jobs don't share staging dirs
+TASK_DIR_TEMPLATE="$SCRIPT_DIR/harbor-task"
+# mktemp generates mixed-case suffixes but Docker requires lowercase image names,
+# and Harbor derives image names from the task directory name.
+TASK_DIR=$(mktemp -d "/tmp/harbor-task-XXXXXX")
+TASK_DIR_LC=$(echo "$TASK_DIR" | tr '[:upper:]' '[:lower:]')
+[ "$TASK_DIR" != "$TASK_DIR_LC" ] && mv "$TASK_DIR" "$TASK_DIR_LC"
+TASK_DIR="$TASK_DIR_LC"
+cp -r "$TASK_DIR_TEMPLATE"/* "$TASK_DIR/"
+
+ENV_DIR="$TASK_DIR/environment"
+INSTRUCTION_TEMPLATE="$TASK_DIR/instruction.md.template"
+INSTRUCTION_OUT="$TASK_DIR/instruction.md"
+
+# --- Resolve previous artifacts if resuming ---
+PREV_ARTIFACTS=""
+if [[ -n "$RESUME_FROM" ]]; then
+    # Find the artifacts directory (support both job dir and trial dir)
+    # Check all possible artifact locations (agent/, verifier/ are Harbor-mounted paths)
+    for artifacts_subdir in "agent/artifacts" "verifier/artifacts" "artifacts"; do
+        if [[ -d "$RESUME_FROM/$artifacts_subdir" ]]; then
+            PREV_ARTIFACTS="$RESUME_FROM/$artifacts_subdir"
+            break
+        fi
+    done
+
+    # If not found directly, look inside trial subdirectory (job dir case)
+    if [[ -z "$PREV_ARTIFACTS" ]]; then
+        TRIAL_DIR=$(find "$RESUME_FROM" -maxdepth 1 -type d -name "harbor-task*" | head -1)
+        if [[ -n "$TRIAL_DIR" ]]; then
+            for artifacts_subdir in "agent/artifacts" "verifier/artifacts" "artifacts"; do
+                if [[ -d "$TRIAL_DIR/$artifacts_subdir" ]]; then
+                    PREV_ARTIFACTS="$TRIAL_DIR/$artifacts_subdir"
+                    break
+                fi
+            done
+        fi
+    fi
+
+    if [[ -z "$PREV_ARTIFACTS" || ! -d "$PREV_ARTIFACTS" ]]; then
+        echo "Error: no artifacts found in $RESUME_FROM" >&2
+        echo "Expected artifacts/ directory with previous run outputs" >&2
+        exit 1
+    fi
+
+    echo "Resuming from: $PREV_ARTIFACTS"
+    ls "$PREV_ARTIFACTS/" 2>/dev/null | sed 's/^/  /'
+    echo ""
+
+    # Auto-detect previous run's GitLab branch from saved metadata
+    for branch_file in "$RESUME_FROM/gitlab_branch" "$RESUME_FROM"/harbor-task-*/gitlab_branch; do
+        if [[ -f "$branch_file" ]]; then
+            RESUME_BRANCH="$(cat "$branch_file")"
+            echo "Detected previous GitLab branch: $RESUME_BRANCH"
+            break
+        fi
+    done
+fi
+
+# --- Copy .env into the build context so docker-compose env_file picks it up ---
+# Uses same order as shell sourcing: project dir first, then parent dir
+# For Modal: env vars come from Modal secrets, not .env file
+for env_file in "$SCRIPT_DIR/.env" "$SCRIPT_DIR/../.env"; do
+    if [[ -f "$env_file" ]]; then
+        cp "$env_file" "$ENV_DIR/.env"
+        break
+    fi
+done
+
+# Pass AGENT_TYPE to the container so submit_for_review.sh knows which CLI to use
+echo "AGENT_TYPE=$AGENT_TYPE" >> "$ENV_DIR/.env"
+
+# Force api-external reviewer mode by default — uses our remote review API at review-api.eigenlabs.online
+echo "REVIEWER_MODE=${REVIEWER_MODE:-api-external}" >> "$ENV_DIR/.env"
+echo "REVIEW_API_URL=${REVIEW_API_URL:-https://review-api.eigenlabs.online}" >> "$ENV_DIR/.env"
+
+# --- GitLab repo setup (if GITLAB_KEY is set) ---
+GITLAB_REPO_URL=""
+GITLAB_BRANCH=""
+GITLAB_BRANCHES=""
+GITLAB_WEB_URL=""
+if [[ -n "${GITLAB_KEY:-}" ]]; then
+    GITLAB_TS="$(date -u +%Y-%m-%d-%H-%M)"
+    GITLAB_SETUP_ARGS=(--idea-name "$IDEA_NAME" --agent "$AGENT_TYPE" --timestamp "$GITLAB_TS")
+    if [[ -n "$RESUME_BRANCH" ]]; then
+        GITLAB_SETUP_ARGS+=(--resume-branch "$RESUME_BRANCH")
+    fi
+    GITLAB_JSON=$(python3 "$SCRIPT_DIR/scripts/gitlab_setup.py" \
+        "${GITLAB_SETUP_ARGS[@]}" 2>/dev/null || echo "")
+    if [[ -n "$GITLAB_JSON" ]]; then
+        GITLAB_REPO_URL=$(echo "$GITLAB_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('repo_url',''))")
+        GITLAB_BRANCH=$(echo "$GITLAB_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('branch',''))")
+        GITLAB_WEB_URL=$(echo "$GITLAB_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('web_url',''))")
+        GITLAB_RESUME_BRANCH=$(echo "$GITLAB_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('resume_branch',''))")
+        GITLAB_BRANCHES=$(echo "$GITLAB_JSON" | python3 -c "
+import sys, json
+branches = json.load(sys.stdin).get('sibling_branches', [])
+if branches:
+    print('\n'.join(f'- \`{b}\`' for b in branches))
+else:
+    print('(none — this is the first run)')
+")
+        # Append GitLab vars to the container's .env (used by local Docker via docker-compose)
+        {
+            echo ""
+            echo "GITLAB_REPO_URL=$GITLAB_REPO_URL"
+            echo "GITLAB_BRANCH=$GITLAB_BRANCH"
+            [[ -n "$GITLAB_RESUME_BRANCH" ]] && echo "GITLAB_RESUME_BRANCH=$GITLAB_RESUME_BRANCH"
+        } >> "$ENV_DIR/.env"
+        # Also write to scripts/.gitlab_env (baked into image, works on Modal where .env isn't mounted)
+        {
+            echo "GITLAB_REPO_URL=$GITLAB_REPO_URL"
+            echo "GITLAB_BRANCH=$GITLAB_BRANCH"
+            [[ -n "$GITLAB_RESUME_BRANCH" ]] && echo "GITLAB_RESUME_BRANCH=$GITLAB_RESUME_BRANCH"
+        } > "$SCRIPT_DIR/scripts/.gitlab_env"
+        echo "GitLab repo: $GITLAB_WEB_URL (branch: $GITLAB_BRANCH)"
+        if [[ -n "$GITLAB_RESUME_BRANCH" ]]; then
+            echo "  Branching off: $GITLAB_RESUME_BRANCH"
+        fi
+    else
+        echo "Warning: GitLab setup failed (continuing without git push)" >&2
+    fi
+fi
+
+# --- Stage repo files into the Docker build context ---
+echo "Staging build context..."
+cp -rL "$SCRIPT_DIR/blank_icbinb_latex" "$ENV_DIR/blank_icbinb_latex"
+cp -rL "$SCRIPT_DIR/scripts"            "$ENV_DIR/scripts"
+cp -rL "$SCRIPT_DIR/.claude"            "$ENV_DIR/.claude"
+# Write search API URL into Docker build context (used by /app/search CLI)
+echo "${SEARCH_PUBLIC_URL:-https://search-api.eigenlabs.online}" > "$ENV_DIR/search_api_url.txt"
+
+# Stage Codex OAuth auth for Docker build context (if available)
+mkdir -p "$ENV_DIR/.codex_auth"
+touch "$ENV_DIR/.codex_auth/.keep"
+if [[ -f "$HOME/.codex/auth.json" ]]; then
+    cp "$HOME/.codex/auth.json" "$ENV_DIR/.codex_auth/auth.json"
+    echo "Staged Codex OAuth auth.json"
+fi
+if [[ -f "$HOME/.codex/config.toml" ]]; then
+    cp "$HOME/.codex/config.toml" "$ENV_DIR/.codex_auth/config.toml"
+    echo "Staged Codex config.toml"
+fi
+
+# Always create a fresh prev_artifacts dir with a placeholder file.
+# Modal's builder omits empty directories from the build context, which causes
+# COPY prev_artifacts/ to fail. The placeholder ensures the dir is non-empty.
+mkdir -p "$ENV_DIR/prev_artifacts"
+touch "$ENV_DIR/prev_artifacts/.keep"
+if [[ -n "$GITLAB_RESUME_BRANCH" ]]; then
+    # Git-based resume: workspace will be populated by branching off the previous
+    # GitLab branch at container runtime — no need to stage artifacts into Docker.
+    echo "Skipping artifact staging (git-based resume from branch $GITLAB_RESUME_BRANCH)"
+elif [[ -n "$PREV_ARTIFACTS" ]]; then
+    cp -r "$PREV_ARTIFACTS"/* "$ENV_DIR/prev_artifacts/" 2>/dev/null || true
+fi
+
+# --- Generate Dockerfile from CPU or GPU source ---
+if [[ "$GPUS" != "0" ]]; then
+    echo "Using GPU image (pytorch + CUDA)"
+    cp "$ENV_DIR/Dockerfile.gpu" "$ENV_DIR/Dockerfile"
+else
+    cp "$ENV_DIR/Dockerfile.cpu" "$ENV_DIR/Dockerfile"
+fi
+
+cleanup() {
+    # Save GitLab branch name for future --resume-from auto-detection
+    local _JOB_DIR="$SCRIPT_DIR/jobs/$JOB_NAME"
+    if [[ -n "$GITLAB_BRANCH" ]] && [[ -d "$_JOB_DIR" ]]; then
+        echo "$GITLAB_BRANCH" > "$_JOB_DIR/gitlab_branch" 2>/dev/null || true
+    fi
+    # Push artifacts to GitLab in background (non-blocking).
+    if [[ -n "${GITLAB_KEY:-}" ]] && [[ -d "$_JOB_DIR" ]]; then
+        echo ""
+        echo "=== Pushing artifacts to GitLab ==="
+        local _PUSH_ARGS=(--job-dir "$_JOB_DIR")
+        if [[ -n "$GITLAB_BRANCH" ]]; then
+            _PUSH_ARGS+=(--branch "$GITLAB_BRANCH")
+        fi
+        nohup python3 "$SCRIPT_DIR/scripts/push_to_gitlab.py" \
+            "${_PUSH_ARGS[@]}" \
+            >> "$_JOB_DIR/gitlab_push.log" 2>&1 &
+        echo "  GitLab push started (PID: $!, log: $_JOB_DIR/gitlab_push.log)"
+    fi
+    rm -rf "$TASK_DIR"
+}
+trap cleanup EXIT
+
+# --- Generate instruction.md from template ---
+RESUME_NOTE=""
+if [[ -n "$GITLAB_RESUME_BRANCH" ]]; then
+    RESUME_NOTE="
+## Resumed Session
+
+This run continues from a previous session. Your workspace has been initialized
+from the previous run's GitLab branch (\`$GITLAB_RESUME_BRANCH\`) — all code,
+results, figures, paper drafts, and submissions are already in place.
+
+Review what's already done before continuing. Focus on completing the missing
+pieces rather than redoing work. Check the quality of existing artifacts and
+improve them if needed. Inspect previous reviewer feedback in \`submissions/\`
+to understand what needs fixing.
+"
+elif [[ -n "$PREV_ARTIFACTS" ]]; then
+    # Build a summary of what already exists
+    EXISTING=""
+    [[ -d "$PREV_ARTIFACTS/experiment_codebase" ]] && \
+        EXISTING="$EXISTING\n- experiment_codebase/ ($(ls "$PREV_ARTIFACTS/experiment_codebase/" 2>/dev/null | wc -l | tr -d ' ') files)"
+    [[ -d "$PREV_ARTIFACTS/figures" ]] && \
+        EXISTING="$EXISTING\n- figures/ ($(ls "$PREV_ARTIFACTS/figures/" 2>/dev/null | wc -l | tr -d ' ') files)"
+    [[ -d "$PREV_ARTIFACTS/literature" ]] && \
+        EXISTING="$EXISTING\n- literature/ ($(ls "$PREV_ARTIFACTS/literature/" 2>/dev/null | wc -l | tr -d ' ') files)"
+    [[ -f "$PREV_ARTIFACTS/paper.pdf" ]] && EXISTING="$EXISTING\n- paper.pdf"
+    [[ -f "$PREV_ARTIFACTS/paper.tex" ]] && EXISTING="$EXISTING\n- paper.tex"
+    [[ -f "$PREV_ARTIFACTS/review.json" ]] && EXISTING="$EXISTING\n- review.json"
+    [[ -d "$PREV_ARTIFACTS/submissions" ]] && \
+        EXISTING="$EXISTING\n- submissions/ ($(ls "$PREV_ARTIFACTS/submissions/" 2>/dev/null | grep -c '^v' || true) versions)"
+
+    RESUME_NOTE="
+## Resumed Session
+
+This run continues from a previous session that timed out. Previous artifacts
+have been pre-loaded into your workspace:
+$(echo -e "$EXISTING")
+
+Review what's already done before continuing. Focus on completing the missing
+pieces rather than redoing work. Check the quality of existing artifacts and
+improve them if needed.
+"
+fi
+
+if [[ -n "$FEEDBACK" ]]; then
+    RESUME_NOTE="$RESUME_NOTE
+## Feedback from Previous Run
+
+$FEEDBACK
+"
+fi
+
+python3 -c "
+import sys, os
+template = open(sys.argv[1]).read()
+idea = open(sys.argv[2]).read()
+resume = sys.argv[3] if len(sys.argv) > 3 else ''
+gitlab_branches = sys.argv[4] if len(sys.argv) > 4 else ''
+result = (template
+    .replace('{{IDEA_CONTENT}}', idea)
+    .replace('{{RESUME_CONTEXT}}', resume)
+    .replace('{{GITLAB_BRANCHES}}', gitlab_branches))
+open(sys.argv[5], 'w').write(result)
+" "$INSTRUCTION_TEMPLATE" "$IDEA_JSON" "$RESUME_NOTE" "$GITLAB_BRANCHES" "$INSTRUCTION_OUT"
+
+# --- Build harbor run command ---
+TIMESTAMP="$(date +%Y-%m-%d__%H-%M-%S)"
+JOB_NAME="${IDEA_NAME}__${TIMESTAMP}"
+
+# Patch task.toml agent timeout to match the user's --timeout value.
+# Harbor uses task.toml timeout_sec * --timeout-multiplier for both the agent
+# and setup timeouts.  By writing the desired timeout directly into task.toml
+# and keeping the multiplier at 1.0, the setup timeout stays at its default
+# (360s) — enough for Docker build + agent install.
+sed -i.bak "s/^timeout_sec = .*/timeout_sec = $TIMEOUT/" "$TASK_DIR/task.toml"
+rm -f "$TASK_DIR/task.toml.bak"
+
+HARBOR_ARGS=(
+    harbor run
+    -p "$TASK_DIR/"
+    -m "$MODEL"
+    --timeout-multiplier 1.0
+    -n 1
+    -o "$SCRIPT_DIR/jobs/"
+    --job-name "$JOB_NAME"
+)
+
+if [[ "$USE_UPSTREAM_AGENT" == "1" ]]; then
+    HARBOR_ARGS+=(-a "$UPSTREAM_AGENT_FLAG")
+else
+    HARBOR_ARGS+=(--agent-import-path "$PATCHED_AGENT_IMPORT_PATH")
+    HARBOR_ARGS+=(--ak "artifact_sync_interval_sec=$ARTIFACT_SYNC_INTERVAL")
+fi
+
+# Environment type
+if [[ -n "$ENV_TYPE" ]]; then
+    HARBOR_ARGS+=(--env "$ENV_TYPE")
+fi
+
+# Modal-specific options
+if [[ "$ENV_TYPE" == "modal" ]]; then
+    HARBOR_ARGS+=(--ek "secrets=[\"$MODAL_SECRET\"]")
+fi
+
+# GPU support (works for both local Docker and Modal)
+if [[ "$GPUS" != "0" ]]; then
+    HARBOR_ARGS+=(--override-gpus "$GPUS")
+fi
+
+echo "Starting Harbor run..."
+echo "  Idea:    $IDEA_JSON"
+echo "  Model:   $MODEL"
+echo "  Timeout: ${TIMEOUT}s"
+echo "  Env:     ${ENV_TYPE:-docker}"
+if [[ "$USE_UPSTREAM_AGENT" == "1" ]]; then
+    echo "  Agent:   $AGENT_TYPE (upstream)"
+else
+    echo "  Agent:   $AGENT_TYPE (patched, local import)"
+    echo "  Sync:    ${ARTIFACT_SYNC_INTERVAL}s"
+fi
+if [[ "$GPUS" != "0" ]]; then
+    echo "  GPUs:    $GPUS"
+fi
+if [[ -n "$GITLAB_RESUME_BRANCH" ]]; then
+    echo "  Resume:  git branch-off $GITLAB_RESUME_BRANCH"
+elif [[ -n "$PREV_ARTIFACTS" ]]; then
+    echo "  Resume:  $PREV_ARTIFACTS (artifact-based)"
+fi
+if [[ -n "$FEEDBACK" ]]; then
+    echo "  Feedback: (included)"
+fi
+if [[ -n "$GITLAB_WEB_URL" ]]; then
+    echo "  GitLab:  $GITLAB_WEB_URL"
+    echo "  Branch:  $GITLAB_BRANCH"
+fi
+echo ""
+
+PYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" "${HARBOR_ARGS[@]}"
