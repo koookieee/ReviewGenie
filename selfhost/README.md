@@ -46,23 +46,55 @@ That's the APIs. **Done.** You can stop here and use them directly via curl/code
 
 ---
 
-## Step 2 (optional) — Expose your local search-api publicly
+## How the pieces talk
 
-Skip this if you want sandboxes to use our hosted search-api (default in step 3).
+`./run.sh` launches the AI Scientist research agent inside an E2B cloud sandbox. From inside that sandbox, the agent calls **both** APIs over the public internet:
 
-E2B sandboxes run on E2B's network, **not** your docker-compose network. They need a public URL to reach your local search-api. Pick one:
-
-```bash
-# Cloudflare Quick Tunnel (no signup, throwaway URL):
-docker run --rm -d --network host cloudflare/cloudflared:latest \
-    tunnel --url http://localhost:8081
-docker logs <container> 2>&1 | grep trycloudflare.com   # → your URL
-
-# Or ngrok:
-ngrok http 8081
+```
+your laptop
+   │ ./run.sh
+   ▼
+   harbor ──► E2B sandbox (research agent)
+                  │ /app/search   ──► SEARCH_PUBLIC_URL (must be public)
+                  │ submit_review ──► REVIEW_API_URL    (must be public)
+                                            │ (review-api spawns its own E2B sandbox per request)
+                                            ▼
+                                          Reviewer agent ──► SEARCH_PUBLIC_URL
 ```
 
-Save the resulting URL — you'll set it as `SEARCH_PUBLIC_URL` in step 3.
+Both URLs must be reachable from the public internet because they're called from inside E2B sandboxes, not from your laptop. `localhost:8082` does not work — that's the sandbox's own loopback.
+
+You have two clean choices:
+- **Use our hosted endpoints** (`*-api.eigenlabs.online`) and skip self-hosting. Easiest.
+- **Self-host both APIs**, then expose them via ngrok or cloudflared. The Search API alone is ~12 GB of RAM with the index loaded; the Review API is light.
+
+---
+
+## Step 2 (optional) — Expose your APIs publicly
+
+Skip this if you'll use our hosted endpoints in step 3.
+
+E2B sandboxes run on E2B's network, **not** your docker-compose network. They need a public URL to reach your local APIs. Easiest way is a Cloudflare Quick Tunnel for each port:
+
+```bash
+# Search API tunnel:
+docker run --rm -d --name cf-search --network host cloudflare/cloudflared:latest \
+    tunnel --url http://localhost:8081
+docker logs cf-search 2>&1 | grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' | head -1
+
+# Review API tunnel:
+docker run --rm -d --name cf-review --network host cloudflare/cloudflared:latest \
+    tunnel --url http://localhost:8082
+docker logs cf-review 2>&1 | grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' | head -1
+```
+
+Or ngrok (one tunnel each):
+```bash
+ngrok http 8081     # → SEARCH_PUBLIC_URL
+ngrok http 8082     # → REVIEW_API_URL
+```
+
+Save both URLs for step 3.
 
 ---
 
@@ -80,12 +112,10 @@ ANTHROPIC_AUTH_TOKEN=<your-key>
 E2B_API_KEY=<your-key>
 GEMINI_API_KEY=<your-key>
 
-# Where review jobs go. Local docker by default; hosted endpoint if you skipped step 1.
-REVIEW_API_URL=http://localhost:8082
-
-# Where in-sandbox /app/search calls go.
-# - If you did step 2: SEARCH_PUBLIC_URL=<your-tunnel-url>
-# - If you skipped:    SEARCH_PUBLIC_URL=https://search-api.eigenlabs.online
+# Both URLs are called from inside E2B sandboxes, so they must be publicly reachable.
+# - If you did step 2: use the tunnel URLs you saved
+# - If you skipped:    use our hosted endpoints
+REVIEW_API_URL=https://review-api.eigenlabs.online
 SEARCH_PUBLIC_URL=https://search-api.eigenlabs.online
 EOF
 
