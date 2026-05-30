@@ -1,0 +1,11 @@
+# Pinned to the versions running on the verified production deployment.
+#
+# harbor==0.7.0 is REQUIRED — gold's PassAtKTrial._setup_environment override
+# silently no-ops on harbor>=0.8 (the hook was renamed), which would break
+# sandbox file uploads to /app/latex/template.tex etc.
+harbor==0.7.0
+aiohttp==3.13.5
+python-dotenv==1.2.2
+loguru==0.7.3
+PyYAML==6.0.3
+e2b==2.25.0

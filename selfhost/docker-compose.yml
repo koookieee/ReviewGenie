@@ -1,0 +1,66 @@
+services:
+  search-api:
+    build:
+      context: ./search-api
+    image: reviewgenie/search-api:0.7.0
+    container_name: reviewgenie-search-api
+    restart: unless-stopped
+    ports:
+      - "${SEARCH_API_PORT:-8081}:8081"
+    environment:
+      # Required: query embeddings are computed via Gemini's batchEmbedContents.
+      # Without it, /batch_search and /find_related fail with "No api_key provided".
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      # Optional overrides
+      GEMINI_INDEX_DIR: "/data/arxiv_search_kit/arxiv_gemini_index"
+      GEMINI_INDEX_HF_REPO: "Vidushee/arxiv-gemini-index"
+    volumes:
+      # ~10GB index downloaded on first start, persisted across restarts.
+      - search_index:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 900s
+
+  review-api:
+    build:
+      context: ./review-api
+    image: reviewgenie/review-api:0.7.0
+    container_name: reviewgenie-review-api
+    restart: unless-stopped
+    ports:
+      - "${REVIEW_API_PORT:-8082}:8082"
+    environment:
+      # E2B spawns sandboxes for each review. Required.
+      E2B_API_KEY: "${E2B_API_KEY}"
+      # Anthropic-compatible endpoint the sandboxed Claude Code calls.
+      # Defaults below point at DeepSeek's anthropic-compatible proxy; swap to https://api.anthropic.com if you have direct access.
+      ANTHROPIC_BASE_URL: "${ANTHROPIC_BASE_URL:-https://api.anthropic.com}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      ANTHROPIC_AUTH_TOKEN: "${ANTHROPIC_AUTH_TOKEN:-${ANTHROPIC_API_KEY}}"
+      # The Search API URL the in-sandbox /app/search CLI calls.
+      # CRITICAL: this URL is used INSIDE E2B sandboxes, which run on E2B's network,
+      # not on this docker-compose network. So it MUST be reachable from the public internet.
+      # Three valid options:
+      #   1. Use our hosted endpoint (zero setup):     SEARCH_PUBLIC_URL=https://search-api.eigenlabs.online
+      #   2. Expose your local search-api via a tunnel: SEARCH_PUBLIC_URL=https://your-tunnel.trycloudflare.com
+      #   3. Run on a public VM:                        SEARCH_PUBLIC_URL=http://<public-ip>:8081
+      # Default falls back to our hosted endpoint so the stack works out of the box.
+      SEARCH_PUBLIC_URL: "${SEARCH_PUBLIC_URL:-https://search-api.eigenlabs.online}"
+      # Gemini key gets forwarded into review_api so it can pass it to the search CLI inside the sandbox.
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+    depends_on:
+      search-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  search_index:
+    name: reviewgenie_search_index
